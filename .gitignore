@@ -1,0 +1,4 @@
+obj/
+.vscode/
+*.h.gch
+*.o

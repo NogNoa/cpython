@@ -1,17 +1,19 @@
 /* Python interpreter main program */
 
-#include "allobjects.h"
+#include <stdlib.h>
 
-#include "grammar.h"
-#include "node.h"
-#include "parsetok.h"
-#include "graminit.h"
-#include "errcode.h"
-#include "sysmodule.h"
-#include "compile.h"
-#include "ceval.h"
-#include "pythonrun.h"
-#include "import.h"
+#include "../Include/allobjects.h"
+
+#include "../Include/grammar.h"
+#include "../Include/node.h"
+#include "../Include/parsetok.h"
+#include "../Include/graminit.h"
+#include "../Include/errcode.h"
+#include "../Include/sysmodule.h"
+#include "../Include/compile.h"
+#include "../Include/ceval.h"
+#include "../Include/pythonrun.h"
+#include "../Include/import.h"
 
 extern char *getpythonpath();
 
