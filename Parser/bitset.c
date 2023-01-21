@@ -1,7 +1,7 @@
 /* Bitset primitives */
 
 #include "PROTO.h"
-#include "malloc.h"
+#include "exmalloc.h"
 #include "bitset.h"
 
 bitset
