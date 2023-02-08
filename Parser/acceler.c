@@ -5,7 +5,7 @@
 #include "PROTO.h"
 #include "grammar.h"
 #include "token.h"
-#include "malloc.h"
+#include "exmalloc.h"
 
 static void
 fixstate(g, d, s)

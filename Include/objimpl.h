@@ -26,6 +26,6 @@ extern varobject *newvarobject PROTO((typeobject *, unsigned int));
 extern int StopPrint; /* Set when printing is interrupted */
 
 /* Malloc interface */
-#include "malloc.h"
+#include "exmalloc.h"
 
 extern char *strdup PROTO((char *));

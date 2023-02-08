@@ -1,7 +1,7 @@
 /* Parse tree node implementation */
 
 #include "PROTO.h"
-#include "malloc.h"
+#include "exmalloc.h"
 #include "node.h"
 
 node *

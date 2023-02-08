@@ -8,7 +8,7 @@
 #include "assert.h"
 
 #include "PROTO.h"
-#include "malloc.h"
+#include "exmalloc.h"
 #include "token.h"
 #include "grammar.h"
 #include "node.h"

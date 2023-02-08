@@ -8,7 +8,7 @@
 #include "string.h"
 
 #include "PROTO.h"
-#include "malloc.h"
+#include "exmalloc.h"
 #include "tokenizer.h"
 #include "errcode.h"
 

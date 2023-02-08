@@ -3,7 +3,7 @@
 #include <stdio.h>
 
 #include "PROTO.h"
-#include "malloc.h"
+#include "exmalloc.h"
 #include "tokenizer.h"
 #include "node.h"
 #include "grammar.h"
