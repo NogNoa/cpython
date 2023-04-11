@@ -38,7 +38,7 @@ newlistobject(size)
 	else {
 		op->ob_item = (object **) malloc(size * sizeof(object *));
 		if (op->ob_item == NULL) {
-			free((ANY *)op);
+			free((void *)op);
 			errno = ENOMEM;
 			return NULL;
 		}
@@ -164,8 +164,8 @@ list_dealloc(op)
 			DECREF(op->ob_item[i]);
 	}
 	if (op->ob_item != NULL)
-		free((ANY *)op->ob_item);
-	free((ANY *)op);
+		free((void *)op->ob_item);
+	free((void *)op);
 }
 
 static void
