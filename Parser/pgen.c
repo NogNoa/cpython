@@ -5,6 +5,9 @@
 
 #include "pgenheaders.h"
 #include "assert.h"
+
+#include "PROTO.h"
+#include "exmalloc.h"
 #include "token.h"
 #include "node.h"
 #include "grammar.h"

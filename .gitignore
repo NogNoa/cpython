@@ -2,3 +2,8 @@ obj/
 .vscode/
 *.h.gch
 *.o
+
+*.bak
+
+[abc].out
+

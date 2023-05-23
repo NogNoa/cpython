@@ -1,5 +1,9 @@
 /* Computation of FIRST stets */
 
+#include <stdio.h>
+
+#include "PROTO.h"
+#include "exmalloc.h"
 #include "pgenheaders.h"
 #include "grammar.h"
 #include "token.h"

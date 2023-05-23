@@ -1,6 +1,6 @@
 /* Bitset interface */
 
-#define BYTE		char
+typedef char BYTE;
 
 typedef BYTE *bitset;
 

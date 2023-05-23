@@ -24,3 +24,8 @@ extern varobject *newvarobject PROTO((typeobject *, unsigned int));
 #define NEWVAROBJ(type, typeobj, n) ((type *) newvarobject(typeobj, n))
 
 extern int StopPrint; /* Set when printing is interrupted */
+
+/* Malloc interface */
+#include "exmalloc.h"
+
+extern char *strdup PROTO((char *));

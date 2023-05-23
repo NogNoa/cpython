@@ -1,5 +1,7 @@
 /* Bitset primitives used by the parser generator */
 
+#include "PROTO.h"
+#include "exmalloc.h"
 #include "pgenheaders.h"
 #include "bitset.h"
 
@@ -8,10 +10,10 @@ newbitset(nbits)
 	int nbits;
 {
 	int nbytes = NBYTES(nbits);
-	bitset ss = NEW(BYTE, nbytes);
+	bitset ss = NEW(bitset, nbytes);
 	
 	if (ss == NULL)
-		fatal("no mem for bitset");
+		perror("no mem for bitset");
 	
 	ss += nbytes;
 	while (--nbytes >= 0)

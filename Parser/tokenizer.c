@@ -10,6 +10,8 @@
 #include "string.h"
 
 #include "fgetsintr.h"
+#include "PROTO.h"
+#include "exmalloc.h"
 #include "tokenizer.h"
 #include "errcode.h"
 

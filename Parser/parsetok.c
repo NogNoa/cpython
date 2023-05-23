@@ -1,6 +1,10 @@
 /* Parser-tokenizer link implementation */
 
 #include "pgenheaders.h"
+#include <stdio.h>
+
+#include "PROTO.h"
+#include "exmalloc.h"
 #include "tokenizer.h"
 #include "node.h"
 #include "grammar.h"

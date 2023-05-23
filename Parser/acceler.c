@@ -12,6 +12,7 @@
 #include "pgenheaders.h"
 #include "grammar.h"
 #include "token.h"
+#include "exmalloc.h"
 #include "parser.h"
 
 /* Forward references */

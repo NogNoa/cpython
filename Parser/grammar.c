@@ -4,6 +4,8 @@
 
 #include <ctype.h>
 
+#include "PROTO.h"
+#include "exmalloc.h"
 #include "assert.h"
 #include "token.h"
 #include "grammar.h"
