@@ -6,12 +6,15 @@
 #include "graminit.h"
 #include "errcode.h"
 #include "sysmodule.h"
-#include "builtinmodule.h"
+#include "bltinmodule.h"
 #include "import.h"
 #include "pythonrun.h"
 #include "compile.h" /* For ceval.h */
 #include "ceval.h"
 #include "modsupport.h"
+
+// int fgets_intr(char*, int, FILE *);
+// void fatal(char *);
 
 static object *
 builtin_abs(self, v)

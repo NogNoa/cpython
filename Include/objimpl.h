@@ -28,4 +28,4 @@ extern int StopPrint; /* Set when printing is interrupted */
 /* Malloc interface */
 #include "exmalloc.h"
 
-extern char *strdup PROTO((char *));
+extern char *strdup PROTO((const char *));

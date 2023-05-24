@@ -318,13 +318,15 @@ CFLAGS = -Wall
 ODIR = obj
 SRCDIR = Python
 HEADDIR = Include
-_OBJ = $(STANDARD_OBJ) $(GENOBJECTS)
+_OBJ = $(GEN_OBJ) $(MAIN_OBJ) $(OBJ_OBJ) 
 OBJ = $(patsubst %, $(ODIR)/%, $(_OBJ))
-GEN_OBJ = $(patsubst %, Parser/%, $(GENOBJECTS))
-GEN_SRC = $(patsubst %, Parser/%, $(GENSOURCES))
-OBJ_SRC = $(patsubst %, Objects/%, $(OBJECTSSOURCES))
-MAIN_SRC = $(patsubst %, Python/%, $(MAINSOURCES))
-OBJPILE = $(CC) $(CFLAGS) -I $(HEADDIR) $< -o $@     
+GEN_OBJ = $(patsubst %, Parser/%.o, $(GENSOURCES))
+GEN_SRC = $(patsubst %, Parser/%.c, $(GENSOURCES))
+OBJ_OBJ = $(patsubst %, Objects/%.o, $(OBJECTSSOURCES))
+OBJ_SRC = $(patsubst %, Objects/%.c, $(OBJECTSSOURCES))
+MAIN_OBJ = $(patsubst %, Python/%.o, $(MAINSOURCES))
+MAIN_SRC = $(patsubst %, Python/%.c, $(MAINSOURCES))
+OBJPILE = $(CC) $(CFLAGS) -I $(HEADDIR) $< -o $@
 COMPILE = $(CC) $(CFLAGS)    -o bin/$@.elf $^
 
 # Major Definitions
@@ -348,23 +350,17 @@ STANDARD_SRC=  $(GEN_SRC) $(FMOD_SRC) $(GETCWD_SRC) \
                $(OBJ_SRC) $(STRERROR_SRC) \
                $(STRTOL_SRC) $(MAIN_SRC)
 
-GENOBJECTS=    acceler.o fgetsintr.o grammar1.o \
-               intrcheck.o listnode.o node.o parser.o \
-               parsetok.o strdup.o tokenizer.o bitset.o \
-               firstsets.o grammar.o metagrammar.o pgen.o \
-               pgenmain.o printgrammar.o
+GENSOURCES=    acceler fgetsintr grammar1 \
+               intrcheck listnode node parser \
+               parsetok strdup tokenizer bitset \
+               firstsets grammar metagrammar pgen \
+               pgenmain printgrammar
 
-GENSOURCES=    acceler.c fgetsintr.c grammar1.c \
-               intrcheck.c listnode.c node.c parser.c \
-               parsetok.c strdup.c tokenizer.c bitset.c \
-               firstsets.c grammar.c metagrammar.c pgen.c \
-               pgenmain.c printgrammar.c
+OBJECTSSOURCES=	classobject  floatobject  funcobject  listobject    moduleobject  stringobject  typeobject \
+				fileobject   frameobject  intobject   methodobject  object        tupleobject   xxobject
 
-OBJECTSSOURCES=	classobject.c  floatobject.c  funcobject.c  listobject.c    moduleobject.c  stringobject.c  typeobject.c \
-				fileobject.c   frameobject.c  intobject.c   methodobject.c  object.c        tupleobject.c   xxobject.c
-
-MAINSOURCES=	bltinmodule.c  cgensupport.c  errors.c  getcwd.c    import.c      pythonmain.c  structmember.c  traceback.c \
-				ceval.c        compile.c      fmod.c    graminit.c  modsupport.c  strerror.c    sysmodule.c
+MAINSOURCES=	bltinmodule  cgensupport  errors  getcwd    import      pythonmain  structmember  traceback \
+				ceval        compile      fmod    graminit  modsupport  strerror    sysmodule
 
 CONFIGDEFS=    $(STDW_USE) $(AM_USE) $(AUDIO_USE) $(GL_USE) $(PANEL_USE) \
                '-DPYTHONPATH="$(DEFPYTHONPATH)"'
@@ -516,6 +512,11 @@ glmodule.c:    cstubs cgen
 
 #graminit.c graminit.h:        Grammar python_gen
 #	python_gen Grammar
+
+# Specific Targets
+# ================
+$(ODIR)/Parser/acceler.o: Parser/acceler.c Parser/grammar1.c
+	$(OBJPILE)
 
 # General Target
 # ===============
