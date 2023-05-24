@@ -318,11 +318,12 @@ CFLAGS = -Wall
 ODIR = obj
 SRCDIR = Python
 HEADDIR = Include
-_OBJ = $(STANDARD_OBJ)
+_OBJ = $(STANDARD_OBJ) $(GENOBJECTS)
 OBJ = $(patsubst %, $(ODIR)/%, $(_OBJ))
+GEN_OBJ = $(patsubst %, Parser/%, $(GENOBJECTS))
 GEN_SRC = $(patsubst %, Parser/%, $(GENSOURCES))
 OBJ_SRC = $(patsubst %, Objects/%, $(OBJECTSSOURCES))
-MAIN_SRC = $(patsubst %, Objects/%, $(MAINSOURCES))
+MAIN_SRC = $(patsubst %, Python/%, $(MAINSOURCES))
 OBJPILE = $(CC) $(CFLAGS) -I $(HEADDIR) $< -o $@     
 COMPILE = $(CC) $(CFLAGS)    -o bin/$@.elf $^
 
@@ -519,5 +520,5 @@ glmodule.c:    cstubs cgen
 # General Target
 # ===============
 
-$(ODIR)/%.o:	$(SRCDIR)/%.c
+$(ODIR)/%.o:	%.c
 	$(OBJPILE)
