@@ -37,6 +37,12 @@ typedef struct _nfa {
 	int		nf_start, nf_finish;
 } nfa;
 
+/* declaring functions */
+static compile_item(labellist *, nfa *, node *, int *, int*);
+static compile_alt(labellist *, nfa *, node *, int *, int*);
+static compile_atom(labellist *, nfa *, node *, int *, int*);
+/* =================== */
+
 static int
 addnfastate(nf)
 	nfa *nf;
@@ -398,6 +404,11 @@ typedef struct _ss_dfa {
 	int	sd_nstates;
 	ss_state *sd_state;
 } ss_dfa;
+
+/* defining funcitons */
+static convert(dfa *, int, ss_state *);
+static simplify(int, ss_state *)
+/* ================== */
 
 static
 makedfa(gr, nf, d)
