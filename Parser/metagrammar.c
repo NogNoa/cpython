@@ -138,7 +138,7 @@ static label labels[19] = {
 	{7, 0},
 	{8, 0},
 };
-static grammar gram = {
+static grammar gramm = {
 	6,
 	dfas,
 	{19, labels},
@@ -148,5 +148,5 @@ static grammar gram = {
 grammar *
 meta_grammar()
 {
-	return &gram;
+	return &gramm;
 }

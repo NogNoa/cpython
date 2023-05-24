@@ -326,7 +326,7 @@ OBJ_OBJ = $(patsubst %, Objects/%.o, $(OBJECTSSOURCES))
 OBJ_SRC = $(patsubst %, Objects/%.c, $(OBJECTSSOURCES))
 MAIN_OBJ = $(patsubst %, Python/%.o, $(MAINSOURCES))
 MAIN_SRC = $(patsubst %, Python/%.c, $(MAINSOURCES))
-OBJPILE = $(CC) $(CFLAGS) -I $(HEADDIR) $? -o $@
+OBJPILE = $(CC) $(CFLAGS) -c -I $(HEADDIR) $? -o $@
 COMPILE = $(CC) $(CFLAGS)    -o bin/$@.elf $^
 
 # Major Definitions
@@ -350,9 +350,9 @@ STANDARD_SRC=  $(GEN_SRC) $(FMOD_SRC) $(GETCWD_SRC) \
                $(OBJ_SRC) $(STRERROR_SRC) \
                $(STRTOL_SRC) $(MAIN_SRC)
 
-GENSOURCES=    acceler fgetsintr grammar1 \
+GENSOURCES=    acceler grammar1 \
                intrcheck listnode node parser \
-               parsetok strdup tokenizer bitset \
+               parsetok tokenizer bitset \
                firstsets grammar metagrammar pgen \
                pgenmain printgrammar
 
@@ -515,17 +515,17 @@ glmodule.c:    cstubs cgen
 
 # Specific Targets
 # ================
-$(ODIR)/Parser/acceler.o: Parser/acceler.c $(ODIR)/Parser/grammar1.o
-	$(OBJPILE)
+# $(ODIR)/Parser/acceler.o: Parser/acceler.c $(ODIR)/Parser/grammar1.o
+# 	$(OBJPILE)
 
-$(ODIR)/Parser/grammar1.o: Parser/grammar1.c $(ODIR)/Parser/tokenizer.o
-	$(OBJPILE)
+# $(ODIR)/Parser/grammar1.o: Parser/grammar1.c $(ODIR)/Parser/tokenizer.o
+# 	$(OBJPILE)
 
-$(ODIR)/Parser/tokenizer.o: Parser/tokenizer.c $(ODIR)/fgetsintr.o Parser/intrcheck.c
-	$(OBJPILE)
+# $(ODIR)/Parser/tokenizer.o: Parser/tokenizer.c $(ODIR)/fgetsintr.o Parser/intrcheck.c
+# 	$(OBJPILE)
 
 # General Target
 # ===============
 
-# $(ODIR)/%.o:	%.c
-# 	$(OBJPILE)
+$(ODIR)/%.o:	%.c
+	$(OBJPILE)

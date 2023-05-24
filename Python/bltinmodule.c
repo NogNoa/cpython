@@ -13,8 +13,6 @@
 #include "ceval.h"
 #include "modsupport.h"
 
-// int fgets_intr(char*, int, FILE *);
-// void fatal(char *);
 
 static object *
 builtin_abs(self, v)
