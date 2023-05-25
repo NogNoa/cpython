@@ -318,8 +318,9 @@ CFLAGS = -Wall
 ODIR = obj
 SRCDIR = Python
 HEADDIR = Include
-_OBJ = $(GEN_OBJ) $(MAIN_OBJ) $(OBJ_OBJ) 
+_OBJ = $(GEN_OBJ) $(MAIN_OBJ) $(OBJ_OBJ) $(MOD_OBJ) 
 OBJ = $(patsubst %, $(ODIR)/%, $(_OBJ))
+MOD_OBJ = $(patsubst %, Modules/%.o, $(MODULESOURCES))
 GEN_OBJ = $(patsubst %, Parser/%.o, $(GENSOURCES))
 GEN_SRC = $(patsubst %, Parser/%.c, $(GENSOURCES))
 OBJ_OBJ = $(patsubst %, Objects/%.o, $(OBJECTSSOURCES))
@@ -349,6 +350,9 @@ STANDARD_OBJ=  acceler.o bltinmodule.o ceval.o classobject.o \
 STANDARD_SRC=  $(GEN_SRC) $(FMOD_SRC) $(GETCWD_SRC) \
                $(OBJ_SRC) $(STRERROR_SRC) \
                $(STRTOL_SRC) $(MAIN_SRC)
+
+MODULESOURCES=	   timemodule config mathmodule \
+			   posixmodule
 
 GENSOURCES=    acceler grammar1 \
                intrcheck listnode node parser \
@@ -380,23 +384,23 @@ LIBOBJECTS=    $(OBJ) $(STDW_OBJ) $(AM_OBJ) $(AUDIO_OBJ) \
 LIBSOURCES=    $(STANDARD_SRC) $(STDW_SRC) $(AM_SRC) $(AUDIO_SRC) \
                $(GL_SRC) $(PANEL_SRC)
 
-OBJECTS=       pythonmain.o #config.o
+OBJECTS=       $(ODIR)/Python/pythonmain.o
 
-SOURCES=       $(LIBSOURCES) Python/pythonmain.c #config.c
+SOURCES=       $(LIBSOURCES) Python/pythonmain.c Modules/config.c
 
 
 # Main Targets
 # ============
 
 python:                libpython.a $(OBJECTS) $(LIBDEPS) Makefile
-	$(CC) $(CFLAGS) $(OBJECTS) $(LIBS) -o @python
-	mv @python python
+	$(CC) $(CFLAGS) $(OBJECTS) $(LIBS) -o @python.elf
+	mv @python.elf python
 
 libpython.a:   $(LIBOBJECTS)
-	-rm -f @lib
-	ar cr @lib $(LIBOBJECTS)
-	$(RANLIB) @lib
-	mv @lib libpython.a
+	-rm -f @lib.ar
+	ar cr @lib.ar $(LIBOBJECTS)
+	$(RANLIB) @lib.ar
+	mv @lib.ar libpython.a
 
 python_gen:    $(GENOBJECTS) $(RL_LIBDEPS)
 	$(CC) $(CFLAGS) $(GENOBJECTS) $(RL_LIBS) -o python_gen
