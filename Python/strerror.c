@@ -4,7 +4,7 @@
 #include <stdio.h>
 
 extern int sys_nerr;
-extern char *sys_errlist[];
+extern const char *const sys_errlist[];
 
 char *
 strerror(err)

@@ -6,7 +6,6 @@
 #include "pgenheaders.h"
 #include "assert.h"
 
-#include "PROTO.h"
 #include "exmalloc.h"
 #include "token.h"
 #include "metagrammar.h"
@@ -17,24 +16,6 @@ extern int debugging;
 
 
 /* PART ONE -- CONSTRUCT NFA -- Cf. Algorithm 3.2 from [Aho&Ullman 77] */
-
-typedef struct _nfaarc {
-	int	ar_label;
-	int	ar_arrow;
-} nfaarc;
-
-typedef struct _nfastate {
-	int	st_narcs;
-	nfaarc	*st_arc;
-} nfastate;
-
-typedef struct _nfa {
-	int		nf_type;
-	char		*nf_name;
-	int		nf_nstates;
-	nfastate	*nf_state;
-	int		nf_start, nf_finish;
-} nfa;
 
 static int
 addnfastate(nf)
@@ -85,12 +66,6 @@ newnfa(name)
 	nf->nf_start = nf->nf_finish = -1;
 	return nf;
 }
-
-typedef struct _nfagrammar {
-	int		gr_nnfas;
-	nfa		**gr_nfa;
-	labellist	gr_ll;
-} nfagrammar;
 
 static nfagrammar *
 newnfagrammar()
@@ -377,21 +352,6 @@ addclosure(ss, nf, istate)
 		}
 	}
 }
-
-typedef struct _ss_arc {
-	bitset	sa_bitset;
-	int	sa_arrow;
-	int	sa_label;
-} ss_arc;
-
-typedef struct _ss_state {
-	bitset	ss_ss;
-	int	ss_narcs;
-	ss_arc	*ss_arc;
-	int	ss_deleted;
-	int	ss_finish;
-	int	ss_rename;
-} ss_state;
 
 typedef struct _ss_dfa {
 	int	sd_nstates;
