@@ -1,6 +1,9 @@
 /* List object implementation */
 
 #include "allobjects.h"
+#include "PROTO.h"
+
+static int list_ass_slice PROTO((listobject *, int, int , object *));
 
 object *
 newlistobject(size)

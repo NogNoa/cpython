@@ -357,7 +357,7 @@ GENSOURCES=    acceler grammar1 \
                pgenmain printgrammar
 
 OBJECTSSOURCES=	classobject  floatobject  funcobject  listobject    moduleobject  stringobject  typeobject \
-				fileobject   frameobject  intobject   methodobject  object        tupleobject   xxobject
+				fileobject   frameobject  intobject   methodobject  object        tupleobject
 
 MAINSOURCES=	bltinmodule  cgensupport  errors  getcwd    import      pythonmain  structmember  traceback \
 				ceval        compile      fmod    graminit  modsupport  strerror    sysmodule

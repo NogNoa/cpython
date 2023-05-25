@@ -21,6 +21,6 @@
 #include "fileobject.h"
 
 #include "errors.h"
-#include "malloc.h"
+#include "exmalloc.h"
 
 extern char *strdup PROTO((const char *));
