@@ -9,9 +9,8 @@
 #include "PROTO.h"
 #include "exmalloc.h"
 #include "token.h"
-#include "node.h"
-#include "grammar.h"
 #include "metagrammar.h"
+#include "pgen_private.h"
 #include "pgen.h"
 
 extern int debugging;
@@ -36,12 +35,6 @@ typedef struct _nfa {
 	nfastate	*nf_state;
 	int		nf_start, nf_finish;
 } nfa;
-
-/* declaring functions */
-static compile_item(labellist *, nfa *, node *, int *, int*);
-static compile_alt(labellist *, nfa *, node *, int *, int*);
-static compile_atom(labellist *, nfa *, node *, int *, int*);
-/* =================== */
 
 static int
 addnfastate(nf)
@@ -404,11 +397,6 @@ typedef struct _ss_dfa {
 	int	sd_nstates;
 	ss_state *sd_state;
 } ss_dfa;
-
-/* defining funcitons */
-static convert(dfa *, int, ss_state *);
-static simplify(int, ss_state *)
-/* ================== */
 
 static
 makedfa(gr, nf, d)
