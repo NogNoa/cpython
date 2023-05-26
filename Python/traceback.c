@@ -7,7 +7,6 @@
 #include "traceback.h"
 #include "structmember.h"
 #include "sysmodule.h"
-#include "exmalloc.h"
 
 typedef struct _tracebackobject {
 	OB_HEAD

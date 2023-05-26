@@ -7,3 +7,5 @@ obj/
 [abc].out
 
 libpython.a
+mk.log
+undefined
