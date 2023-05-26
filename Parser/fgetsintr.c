@@ -7,11 +7,14 @@ int fgets_intr(str, n, stream)
 char *str; int n; FILE *stream;
 {
     char * call = NEW(char, n);
+    int back;
     strncpy(call, str, n);
     if (fgets(str, n, stream) == NULL)
     {   if (strncmp(call,str, n))
-            {return E_TOKEN;}
-        else {return E_EOF;}
+            {back = E_TOKEN;}
+        else {back = E_EOF;}
     }
-    else {return E_OK;}
+    else {back = E_OK;}
+    DEL(call);
+    return back;
 }
