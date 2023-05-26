@@ -1,14 +1,15 @@
 #include <stdio.h>
 #include <string.h>
 #include "errcode.h"
+#include "exmalloc.h"
 
-int fgetintr(str, n, stream)
+int fgets_intr(str, n, stream)
 char *str; int n; FILE *stream;
 {
-    char * call;
-    strncopy(call, str, n);
+    char * call = NEW(char, n);
+    strncpy(call, str, n);
     if (fgets(str, n, stream) == NULL)
-    {   if (strcmp(call,str))
+    {   if (strncmp(call,str, n))
             {return E_TOKEN;}
         else {return E_EOF;}
     }

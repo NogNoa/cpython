@@ -358,7 +358,7 @@ GENSOURCES=    acceler grammar1 \
                intrcheck listnode node parser \
                parsetok tokenizer bitset \
                firstsets grammar metagrammar pgen \
-               pgenmain printgrammar fgetsintc
+               pgenmain printgrammar fgetsintr
 
 OBJECTSSOURCES=	classobject  floatobject  funcobject  listobject    moduleobject  stringobject  typeobject \
 				fileobject   frameobject  intobject   methodobject  object        tupleobject
