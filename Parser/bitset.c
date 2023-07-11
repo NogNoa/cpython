@@ -10,7 +10,7 @@ newbitset(nbits)
 	int nbits;
 {
 	int nbytes = NBYTES(nbits);
-	bitset ss = NEW(bitset, nbytes);
+	bitset ss = NEW(BYTE, nbytes);
 	
 	if (ss == NULL)
 		perror("no mem for bitset");

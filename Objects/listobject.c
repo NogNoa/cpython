@@ -160,8 +160,8 @@ list_dealloc(op)
 			DECREF(op->ob_item[i]);
 	}
 	if (op->ob_item != NULL)
-		free((void *)op->ob_item);
-	free((void *)op);
+		free((ANY *)op->ob_item);
+	free((ANY *)op);
 }
 
 static void

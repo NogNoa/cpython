@@ -89,7 +89,7 @@ tupledealloc(op)
 		if (op->ob_item[i] != NULL)
 			DECREF(op->ob_item[i]);
 	}
-	free((void *)op);
+	free((ANY *)op);
 }
 
 static void
