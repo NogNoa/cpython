@@ -12,6 +12,38 @@ typedef struct {
 } dictobject;
 
 
+object *
+newdictobject(size)
+	int size;
+{
+	int i;
+	dictobject *op;
+	if (size < 0) {
+		err_badcall();
+		return NULL;
+	}
+	op = (dictobject *) malloc(sizeof(dictobject));
+	if (op == NULL) {
+		return err_nomem();
+	}
+	if (size <= 0) {
+		op->ob_item = NULL;
+	}
+	else {
+		op->ob_item = (entry **) malloc(size * sizeof(entry *));
+		if (op->ob_item == NULL) {
+			free((ANY *)op);
+			return err_nomem();
+		}
+	}
+	NEWREF(op);
+	op->ob_type = &Dicttype;
+	op->ob_size = size;
+	for (i = 0; i < size; i++)
+		op->ob_item[i] = NULL;
+	return (object *) op;
+}
+
 static void
 dict_dealloc(op)
 	dictobject *op;
@@ -71,13 +103,7 @@ dict_repr(op)
 	return s;
 }
 
-static object *
-dict_getattr(f, name)
-	dictobject *f;
-	char *name;
-{
-	return findmethod(dict_methods, (object *)f, name);
-}
+
 
 static int
 dict_length(a)
@@ -95,11 +121,11 @@ typeobject Dicttype = {
 	0, /* Item size for varobject */
 	dict_dealloc,	/*tp_dealloc*/
 	dict_print,	/*tp_print*/
-	dict_getattr,	/*tp_getattr*/
+	NULL,//dict_getattr,	/*tp_getattr*/
 	NULL,		/*tp_setattr*/
 	NULL,	/*tp_compare*/
 	dict_repr,	/*tp_repr*/
 	NULL,		/*tp_as_number*/
-	&dict_as_sequence,	/*tp_as_sequence*/
-	&dict_as_mapping,		/*tp_as_mapping*/
+	NULL,//&dict_as_sequence,	/*tp_as_sequence*/
+	NULL,//&dict_as_mapping,		/*tp_as_mapping*/
 };
