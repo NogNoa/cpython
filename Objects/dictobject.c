@@ -37,8 +37,7 @@ dict_print(op, fp, flags)
 	int i;
 	fprintf(fp, "{");
 	for (i = 0; i < op->ob_size && !StopPrint; i++) {
-		printobject(op->ob_item[i]->key, fp, flags);
-		fprintf(fp, ": ");
+		fprintf(fp, "%s: ", op->ob_item[i]->key);
 		printobject(op->ob_item[i]->value, fp, flags);
 		fprintf(fp, (i < op->ob_size-1) ? ", " : "}");
 	}
@@ -55,7 +54,7 @@ dict_repr(op)
 	colon = newstringobject(": ");
 	t = newstringobject("}");
 	for (i = 0; i < op->ob_size && s != NULL; i++) {
-		k = reprobject(op->ob_item[i]->key);
+		k = newstringobject(op->ob_item[i]->key);
 		v = reprobject(op->ob_item[i]->value);
 		joinstring(&k, colon);
 		joinstring(&v, (i < op->ob_size-1) ? comma : t);
