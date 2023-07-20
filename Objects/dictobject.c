@@ -28,6 +28,7 @@ dict_dealloc(op)
 	free((ANY *)op);
 }
 
+
 static void
 dict_print(op, fp, flags)
 	dictobject *op;
@@ -42,6 +43,7 @@ dict_print(op, fp, flags)
 		fprintf(fp, (i < op->ob_size-1) ? ", " : "}");
 	}
 }
+
 
 object *
 dict_repr(op)
@@ -69,6 +71,22 @@ dict_repr(op)
 	return s;
 }
 
+static object *
+dict_getattr(f, name)
+	dictobject *f;
+	char *name;
+{
+	return findmethod(dict_methods, (object *)f, name);
+}
+
+static int
+dict_length(a)
+	dictobject *a;
+{
+	return a->ob_size;
+}
+
+
 typeobject Dicttype = {
 	OB_HEAD_INIT(&Typetype)
 	0, /* Number of items for varobject */
@@ -79,9 +97,9 @@ typeobject Dicttype = {
 	dict_print,	/*tp_print*/
 	dict_getattr,	/*tp_getattr*/
 	NULL,		/*tp_setattr*/
-	dict_compare,	/*tp_compare*/
+	NULL,	/*tp_compare*/
 	dict_repr,	/*tp_repr*/
 	NULL,		/*tp_as_number*/
-	NULL,	/*tp_as_sequence*/
+	&dict_as_sequence,	/*tp_as_sequence*/
 	&dict_as_mapping,		/*tp_as_mapping*/
 };
