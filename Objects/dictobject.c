@@ -1,3 +1,6 @@
+#include "allobjects.h"
+#include "PROTO.h"
+
 typedef struct {
 	char *key;
 	object *value;
@@ -5,7 +8,7 @@ typedef struct {
 
 typedef struct {
 	OB_VARHEAD
-	entry *ob_item;
+	entry **ob_item;
 } dictobject;
 
 
@@ -16,9 +19,9 @@ dict_dealloc(op)
 	int i;
 	for (i = 0; i < op->ob_size; i++) {
 		if (op->ob_item[i] != NULL)
-			free(op->ob_item[i]->key)
+			free(op->ob_item[i]->key);
 			DECREF(op->ob_item[i]->value);
-			free(op->ob_item[i])
+			free(op->ob_item[i]);
 	}
 	if (op->ob_item != NULL)
 		free((ANY *)op->ob_item);
@@ -37,29 +40,29 @@ dict_print(op, fp, flags)
 		printobject(op->ob_item[i]->key, fp, flags);
 		fprintf(fp, ": ");
 		printobject(op->ob_item[i]->value, fp, flags);
-		fprintf((i < op->ob_size-1) ? ", " : "}")
+		fprintf(fp, (i < op->ob_size-1) ? ", " : "}");
 	}
 }
 
 object *
-list_repr(v)
-	listobject *v;
+dict_repr(op)
+	dictobject *op;
 {
-	object *s, *k, *comma, *colon;
+	object *s, *k, *v, *t, *comma, *colon;
 	int i;
 	s = newstringobject("{");
 	comma = newstringobject(", ");
 	colon = newstringobject(": ");
 	t = newstringobject("}");
-	for (i = 0; i < v->ob_size && s != NULL; i++) {
-		k = reprobject(v->ob_item[i]->key);
-		vl = reprobject(v->ob_item[i]->value);
+	for (i = 0; i < op->ob_size && s != NULL; i++) {
+		k = reprobject(op->ob_item[i]->key);
+		v = reprobject(op->ob_item[i]->value);
 		joinstring(&k, colon);
-		joinstring(&vl, (i < v->ob_size-1) ? comma : t);
-		joinstring(&k, vl);
+		joinstring(&v, (i < op->ob_size-1) ? comma : t);
+		joinstring(&k, v);
 		joinstring(&s, k);
 		DECREF(k);
-		DECREF(vl);
+		DECREF(v);
 	}
 	DECREF(comma);
 	DECREF(colon);
