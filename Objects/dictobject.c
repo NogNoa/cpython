@@ -34,14 +34,11 @@ dict_print(op, fp, flags)
 	int i;
 	fprintf(fp, "{");
 	for (i = 0; i < op->ob_size && !StopPrint; i++) {
-		if (i > 0) {
-			fprintf(fp, ", ");
-		}
 		printobject(op->ob_item[i]->key, fp, flags);
 		fprintf(fp, ": ");
 		printobject(op->ob_item[i]->value, fp, flags);
+		fprintf((i < op->ob_size-1) ? ", " : "}")
 	}
-	fprintf(fp, "}");
 }
 
 object *
@@ -53,12 +50,12 @@ list_repr(v)
 	s = newstringobject("{");
 	comma = newstringobject(", ");
 	colon = newstringobject(": ");
+	t = newstringobject("}");
 	for (i = 0; i < v->ob_size && s != NULL; i++) {
-		if (i > 0)
-			joinstring(&s, comma);
 		k = reprobject(v->ob_item[i]->key);
 		vl = reprobject(v->ob_item[i]->value);
 		joinstring(&k, colon);
+		joinstring(&vl, (i < v->ob_size-1) ? comma : t);
 		joinstring(&k, vl);
 		joinstring(&s, k);
 		DECREF(k);
@@ -66,8 +63,6 @@ list_repr(v)
 	}
 	DECREF(comma);
 	DECREF(colon);
-	t = newstringobject("}");
-	joinstring(&s, t);
 	DECREF(t);
 	return s;
 }
