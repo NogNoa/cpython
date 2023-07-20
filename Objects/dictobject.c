@@ -25,6 +25,53 @@ dict_dealloc(op)
 	free((ANY *)op);
 }
 
+static void
+dict_print(op, fp, flags)
+	dictobject *op;
+	FILE *fp;
+	int flags;
+{
+	int i;
+	fprintf(fp, "{");
+	for (i = 0; i < op->ob_size && !StopPrint; i++) {
+		if (i > 0) {
+			fprintf(fp, ", ");
+		}
+		printobject(op->ob_item[i]->key, fp, flags);
+		fprintf(fp, ": ");
+		printobject(op->ob_item[i]->value, fp, flags);
+	}
+	fprintf(fp, "}");
+}
+
+object *
+list_repr(v)
+	listobject *v;
+{
+	object *s, *k, *comma, *colon;
+	int i;
+	s = newstringobject("{");
+	comma = newstringobject(", ");
+	colon = newstringobject(": ");
+	for (i = 0; i < v->ob_size && s != NULL; i++) {
+		if (i > 0)
+			joinstring(&s, comma);
+		k = reprobject(v->ob_item[i]->key);
+		vl = reprobject(v->ob_item[i]->value);
+		joinstring(&k, colon);
+		joinstring(&k, vl);
+		joinstring(&s, k);
+		DECREF(k);
+		DECREF(vl);
+	}
+	DECREF(comma);
+	DECREF(colon);
+	t = newstringobject("}");
+	joinstring(&s, t);
+	DECREF(t);
+	return s;
+}
+
 typeobject Dicttype = {
 	OB_HEAD_INIT(&Typetype)
 	0, /* Number of items for varobject */

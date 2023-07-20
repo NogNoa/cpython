@@ -1,5 +1,6 @@
 obj/
 .vscode/
+Research/
 
 *.h.gch
 *.o
@@ -7,4 +8,3 @@ obj/
 [abc].out
 
 libpython.a
-/Research
