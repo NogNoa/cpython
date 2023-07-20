@@ -27,6 +27,7 @@ newdictobject(void)
 	return (object *) op;
 }
 
+
 static void
 dict_dealloc(op)
 	dictobject *op;
@@ -44,6 +45,65 @@ dict_dealloc(op)
 }
 
 
+object *
+dictlookup(dp, key)
+	object *dp; 
+	char *key;
+{
+	int i;
+	if (!is_dictobject(dp)) {
+		err_badcall();
+		return NULL;
+	}
+	for (i = 0; i < dp->ob_size; i++) {
+		if !strcmp(key, dp->ob_item[i]->key)
+			return dp->ob_item[i].value;
+	}
+	err_setstr(KeyError, key);
+	return NULL;
+}
+
+
+static int
+ins1(self, v)
+	dictobject *self;
+	object *v;
+{
+	int i, where;
+	object **items;
+	if (v == NULL) {
+		err_badcall();
+		return -1;
+	}
+	items = self->ob_item;
+	RESIZE(items, object *, self->ob_size+1);
+	if (items == NULL) {
+		err_nomem();
+		return -1;
+	}
+	where = (int) self->ob_size;
+	if (where < 0)
+		where = 0;
+	INCREF(v);
+	items[where] = v;
+	self->ob_item = items;
+	self->ob_size++;
+	return 0;
+}
+
+
+int dictinsert(dp, key, item);
+object *dp, *item;
+char *key;
+{
+	if (!is_dictobject(dp)) {
+		err_badcall();
+		return -1;
+	}
+	return ins1((dictobject *)dp,
+		, item);
+}
+
 static void
 dict_print(op, fp, flags)
 	dictobject *op;
@@ -60,7 +120,7 @@ dict_print(op, fp, flags)
 }
 
 
-object *
+static object *
 dict_repr(op)
 	dictobject *op;
 {
