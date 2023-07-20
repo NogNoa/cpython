@@ -13,34 +13,17 @@ typedef struct {
 
 
 object *
-newdictobject(size)
-	int size;
+newdictobject(void)
 {
-	int i;
 	dictobject *op;
-	if (size < 0) {
-		err_badcall();
-		return NULL;
-	}
 	op = (dictobject *) malloc(sizeof(dictobject));
 	if (op == NULL) {
 		return err_nomem();
 	}
-	if (size <= 0) {
-		op->ob_item = NULL;
-	}
-	else {
-		op->ob_item = (entry **) malloc(size * sizeof(entry *));
-		if (op->ob_item == NULL) {
-			free((ANY *)op);
-			return err_nomem();
-		}
-	}
+	op->ob_item = NULL;
 	NEWREF(op);
 	op->ob_type = &Dicttype;
-	op->ob_size = size;
-	for (i = 0; i < size; i++)
-		op->ob_item[i] = NULL;
+	op->ob_size = 0;
 	return (object *) op;
 }
 
