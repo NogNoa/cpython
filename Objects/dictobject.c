@@ -55,9 +55,10 @@ dictlookup(dp, key)
 		err_badcall();
 		return NULL;
 	}
-	for (i = 0; i < dp->ob_size; i++) {
-		if !strcmp(key, dp->ob_item[i]->key)
-			return dp->ob_item[i].value;
+	dictobject* dct = (dictobject *) dp;
+	for (i = 0; i < dct->ob_size; i++) {
+		if (!strcmp(key, dct->ob_item[i]->key))
+			return dct->ob_item[i]->value;
 	}
 	err_setstr(KeyError, key);
 	return NULL;
@@ -65,34 +66,34 @@ dictlookup(dp, key)
 
 
 static int
-ins1(self, v)
+ins1(self, item)
 	dictobject *self;
-	object *v;
+	object *item;
 {
-	int i, where;
-	object **items;
-	if (v == NULL) {
+	int where;
+	entry **entries;
+	if (item == NULL) {
 		err_badcall();
 		return -1;
 	}
-	items = self->ob_item;
-	RESIZE(items, object *, self->ob_size+1);
-	if (items == NULL) {
+	entries = self->ob_item;
+	RESIZE(entries, entry *, self->ob_size+1);
+	if (entries == NULL) {
 		err_nomem();
 		return -1;
 	}
 	where = (int) self->ob_size;
 	if (where < 0)
 		where = 0;
-	INCREF(v);
-	items[where] = v;
-	self->ob_item = items;
+	INCREF(item);
+	entries[where] = item;
+	self->ob_item = entries;
 	self->ob_size++;
 	return 0;
 }
 
 
-int dictinsert(dp, key, item);
+int dictinsert(dp, key, item)
 object *dp, *item;
 char *key;
 {
@@ -100,8 +101,7 @@ char *key;
 		err_badcall();
 		return -1;
 	}
-	return ins1((dictobject *)dp,
-		, item);
+	return ins1((dictobject *)dp, item);
 }
 
 static void
