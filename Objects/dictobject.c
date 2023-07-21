@@ -51,8 +51,8 @@ keylookup(dp, key)
 	char *key;
 {
 	int i;
-	for (i = 0; i < dct->ob_size; i++) {
-		if (!strcmp(key, dct->ob_item[i]->key))
+	for (i = 0; i < dp->ob_size; i++) {
+		if (!strcmp(key, dp->ob_item[i]->key))
 			return i;
 	}
 	return -1;
@@ -64,12 +64,13 @@ dictlookup(dp, key)
 	char *key;
 {
 	int i;
+	dictobject* dct;
 	if (!is_dictobject(dp)) {
 		err_badcall();
 		return NULL;
 	}
 	else {
-		dictobject* dct = (dictobject *) dp;
+		dct = (dictobject *) dp;
 	}
 	i = keylookup(dct, key);
 	if (i >= 0)
@@ -107,7 +108,6 @@ ins(self, entr)
 	return 0;
 }
 
-
 int
 dictinsert(dp, key, item)
 object *dp, *item;
@@ -122,7 +122,7 @@ char *key;
 		err_badarg();
 		return -1;
 	}
-	if dictlookup
+	// if (dictlookup)
 	INCREF(item);
 	entr->key = key;
 	entr->value = item;
@@ -130,19 +130,52 @@ char *key;
 }
 
 
-extern int dictremove(dp, key)
+static int
+rem(self, where)
+dictobject *self;
+int where;
+{
+	entry **entries = self->ob_item;
+	entry *entr;
+	if (where < 0 || self->ob_size < where) {
+		err_badarg();
+		return -1;
+	}
+	entr = entries[where];
+	free(entr->key);
+	DECREF(entr->value);
+	free(entr);
+	RESIZE(entries, entry *, self->ob_size-1);
+	if (entries == NULL) {
+		err_nomem();
+		return -1;
+	}
+	self->ob_item = entries;
+	self->ob_size--;
+	return 0;
+}
+
+int
+dictremove(dp, key)
 object *dp;
 char *key;
 {
 	int i;
+	dictobject* dct;
 	if (!is_dictobject(dp)) {
 		err_badcall();
-		return NULL;
+		return -1;
 	}
 	else {
-		dictobject* dct = (dictobject *) dp;
+		dct = (dictobject *) dp;
 	}
 	i = keylookup(dct, key);
+	if (i >= 0)
+		{return rem(dct,i);}
+	else {
+		err_setstr(KeyError, key);
+		return -1;
+	}
 }
 
 
