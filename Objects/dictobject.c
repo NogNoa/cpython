@@ -45,6 +45,18 @@ dict_dealloc(op)
 	free((ANY *)op);
 }
 
+static int
+keylookup(dp, key)
+	dictobject *dp; 
+	char *key;
+{
+	int i;
+	for (i = 0; i < dct->ob_size; i++) {
+		if (!strcmp(key, dct->ob_item[i]->key))
+			return i;
+	}
+	return -1;
+}
 
 object *
 dictlookup(dp, key)
@@ -56,13 +68,16 @@ dictlookup(dp, key)
 		err_badcall();
 		return NULL;
 	}
-	dictobject* dct = (dictobject *) dp;
-	for (i = 0; i < dct->ob_size; i++) {
-		if (!strcmp(key, dct->ob_item[i]->key))
-			return dct->ob_item[i]->value;
+	else {
+		dictobject* dct = (dictobject *) dp;
 	}
-	err_setstr(KeyError, key);
-	return NULL;
+	i = keylookup(dct, key);
+	if (i >= 0)
+		{return dct->ob_item[i]->value;}
+	else {
+		err_setstr(KeyError, key);
+		return NULL;
+	}	
 }
 
 
@@ -98,25 +113,16 @@ dictinsert(dp, key, item)
 object *dp, *item;
 char *key;
 {
-	int i;
-	if (key == NULL || item == NULL) {
-		err_badarg();
-		return NULL;
-	}
-	return ins(dp, , key, item);
-}
-
-
-int
-addlistitem(dp, key, item)
-object *dp, *item;
-char *key;
-{
 	entry *entr = NEW(entry, sizeof(entry *));
 	if (!is_dictobject(dp)) {
 		err_badcall();
 		return -1;
 	}
+	if (key == NULL || item == NULL) {
+		err_badarg();
+		return -1;
+	}
+	if dictlookup
 	INCREF(item);
 	entr->key = key;
 	entr->value = item;
@@ -128,7 +134,15 @@ extern int dictremove(dp, key)
 object *dp;
 char *key;
 {
-
+	int i;
+	if (!is_dictobject(dp)) {
+		err_badcall();
+		return NULL;
+	}
+	else {
+		dictobject* dct = (dictobject *) dp;
+	}
+	i = keylookup(dct, key);
 }
 
 
