@@ -1,5 +1,6 @@
 #include "allobjects.h"
 #include "PROTO.h"
+#include "exmalloc.h"
 
 typedef struct {
 	char *key;
@@ -96,13 +97,14 @@ int dictinsert(dp, key, item)
 object *dp, *item;
 char *key;
 {
-	entry *entr;
+	entry *entr = NEW(entry, sizeof(entry *));
 	if (!is_dictobject(dp)) {
 		err_badcall();
 		return -1;
 	}
 	INCREF(item);
-	entr = {key, item};
+	entr->key = key;
+	entr->value = item;
 	return ins1((dictobject *)dp, entr);
 }
 
