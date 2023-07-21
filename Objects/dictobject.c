@@ -66,13 +66,13 @@ dictlookup(dp, key)
 
 
 static int
-ins1(self, item)
+ins1(self, entr)
 	dictobject *self;
-	object *item;
+	entry *entr;
 {
 	int where;
 	entry **entries;
-	if (item == NULL) {
+	if (entr == NULL) {
 		err_badcall();
 		return -1;
 	}
@@ -85,8 +85,7 @@ ins1(self, item)
 	where = (int) self->ob_size;
 	if (where < 0)
 		where = 0;
-	INCREF(item);
-	entries[where] = item;
+	entries[where] = entr;
 	self->ob_item = entries;
 	self->ob_size++;
 	return 0;
@@ -97,11 +96,14 @@ int dictinsert(dp, key, item)
 object *dp, *item;
 char *key;
 {
+	entry *entr;
 	if (!is_dictobject(dp)) {
 		err_badcall();
 		return -1;
 	}
-	return ins1((dictobject *)dp, item);
+	INCREF(item);
+	entr = {key, item};
+	return ins1((dictobject *)dp, entr);
 }
 
 static void
