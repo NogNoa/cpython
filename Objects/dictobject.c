@@ -108,11 +108,36 @@ ins(self, entr)
 	return 0;
 }
 
+static int
+replace(self, where, item)
+	dictobject *self;
+	int where;
+	object *item;
+{
+	entry **entries = self->ob_item;
+	entry *entr;
+	if (where < 0 || self->ob_size < where) {
+		err_badarg();
+		return -1;
+	}
+	entr = entries[where];
+	if (entr == NULL) {
+		err_badcall();
+		return -1;
+	}
+	DECREF(entr->value);
+	entr->value = item;
+	INCREF(item);
+	self->ob_item = entries;
+	return 0;
+}
+
 int
 dictinsert(dp, key, item)
 object *dp, *item;
 char *key;
 {
+	int where;
 	entry *entr = NEW(entry, sizeof(entry *));
 	if (!is_dictobject(dp)) {
 		err_badcall();
@@ -122,11 +147,16 @@ char *key;
 		err_badarg();
 		return -1;
 	}
-	// if (dictlookup)
-	INCREF(item);
-	entr->key = key;
-	entr->value = item;
-	return ins((dictobject *)dp, entr);
+	where = keylookup((dictobject *) dp, key);
+	if (where >= 0) {
+		return replace(dp, where, item);
+	}
+	else {
+		INCREF(item);
+		entr->key = key;
+		entr->value = item;
+		return ins((dictobject *)dp, entr);
+	}
 }
 
 
