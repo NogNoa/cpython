@@ -109,18 +109,12 @@ ins(self, entr)
 }
 
 static int
-replace(self, where, item)
+replace(self, entr, item)
 	dictobject *self;
-	int where;
+	entry *entr;
 	object *item;
 {
 	entry **entries = self->ob_item;
-	entry *entr;
-	if (where < 0 || self->ob_size < where) {
-		err_badarg();
-		return -1;
-	}
-	entr = entries[where];
 	if (entr == NULL) {
 		err_badcall();
 		return -1;
@@ -138,24 +132,30 @@ object *dp, *item;
 char *key;
 {
 	int where;
-	entry *entr = NEW(entry, sizeof(entry *));
+	entry *entr;
+	dictobject* dct;
 	if (!is_dictobject(dp)) {
 		err_badcall();
 		return -1;
+	}
+	else {
+		dct = (dictobject *) dp;
 	}
 	if (key == NULL || item == NULL) {
 		err_badarg();
 		return -1;
 	}
-	where = keylookup((dictobject *) dp, key);
+	where = keylookup(dct, key);
 	if (where >= 0) {
-		return replace(dp, where, item);
+		entr = dct->ob_item[where]; //dest_entr
+		return replace(dct, entr, item);
 	}
 	else {
+		entr = NEW(entry, sizeof(entry *)); //new_entr
 		INCREF(item);
 		entr->key = key;
 		entr->value = item;
-		return ins((dictobject *)dp, entr);
+		return ins(dct, entr);
 	}
 }
 
