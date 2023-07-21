@@ -67,7 +67,7 @@ dictlookup(dp, key)
 
 
 static int
-ins1(self, entr)
+ins(self, entr)
 	dictobject *self;
 	entry *entr;
 {
@@ -93,7 +93,22 @@ ins1(self, entr)
 }
 
 
-int dictinsert(dp, key, item)
+int
+dictinsert(dp, key, item)
+object *dp, *item;
+char *key;
+{
+	int i;
+	if (key == NULL || item == NULL) {
+		err_badarg();
+		return NULL;
+	}
+	return ins(dp, , key, item);
+}
+
+
+int
+addlistitem(dp, key, item)
 object *dp, *item;
 char *key;
 {
@@ -105,8 +120,17 @@ char *key;
 	INCREF(item);
 	entr->key = key;
 	entr->value = item;
-	return ins1((dictobject *)dp, entr);
+	return ins((dictobject *)dp, entr);
 }
+
+
+extern int dictremove(dp, key)
+object *dp;
+char *key;
+{
+
+}
+
 
 static void
 dict_print(op, fp, flags)
