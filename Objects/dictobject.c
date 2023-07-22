@@ -128,8 +128,8 @@ replace(self, entr, item)
 
 int
 dictinsert(dp, key, item)
-object *dp, *item;
-char *key;
+	object *dp, *item;
+	char *key;
 {
 	int where;
 	entry *entr;
@@ -187,8 +187,8 @@ int where;
 
 int
 dictremove(dp, key)
-object *dp;
-char *key;
+	object *dp;
+	char *key;
 {
 	int i;
 	dictobject* dct;
@@ -206,6 +206,37 @@ char *key;
 		err_setstr(KeyError, key);
 		return -1;
 	}
+}
+
+
+int
+getdictsize(dp)
+	object *dp;
+{
+	if (!is_dictobject(dp)) {
+		err_badcall();
+		return -1;
+	}
+	else
+		return ((dictobject *)dp) -> ob_size;
+}
+
+
+char *
+getdictkey(dp, i)
+	object *dp;
+	int i;
+{
+	entry **entries;
+	entry *entr;
+	dictobject * dct = (dictobject *) dp;
+	if (i < 0 || dct->ob_size < i) {
+		err_badarg();
+		return NULL;
+	}
+	entries = dct->ob_item;
+	entr = entries[i];
+	return entr->key;
 }
 
 
