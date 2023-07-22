@@ -218,7 +218,13 @@ getdictkey(dp, i)
 	object *dp;
 	int i;
 {
-	dictobject *dct = (dictobject *) dp;
+	dictobject *dct;
+	if (!is_dictobject(dp)) {
+		err_badcall();
+		return NULL;
+	}
+	else
+		{dct = (dictobject *) dp;}
 	if (i < 0 || dct->ob_size < i) {
 		err_badarg();
 		return NULL;
@@ -226,6 +232,20 @@ getdictkey(dp, i)
 	return (char *) getlistitem(dct->dict_key, i);
 }
 
+object *
+getdictkeys(dp)
+	object *dp;
+{
+		if (!is_dictobject(dp)) {
+		err_badcall();
+		return NULL;
+	}
+	else {
+		dictobject *dct = (dictobject *) dp;
+		return dct->dict_key;
+	}
+
+}
 
 static void
 dict_print(op, fp, flags)
