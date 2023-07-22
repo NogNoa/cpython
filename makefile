@@ -345,7 +345,7 @@ STANDARD_OBJ=  acceler.o bltinmodule.o ceval.o classobject.o \
                strdup.o $(STRERROR_OBJ) \
                stringobject.o $(STRTOL_OBJ) structmember.o \
                sysmodule.o timemodule.o tokenizer.o traceback.o \
-               tupleobject.o typeobject.o
+               tupleobject.o typeobject.o dictobject.o
 
 STANDARD_SRC=  $(GEN_SRC) $(FMOD_SRC) $(GETCWD_SRC) \
                $(OBJ_SRC) $(STRERROR_SRC) \
@@ -361,7 +361,7 @@ GENSOURCES=    acceler grammar1 \
                pgenmain printgrammar fgetsintr
 
 OBJECTSSOURCES=	classobject  floatobject  funcobject  listobject    moduleobject  stringobject  typeobject \
-				fileobject   frameobject  intobject   methodobject  object        tupleobject
+				fileobject   frameobject  intobject   methodobject  object        tupleobject  dictobject
 
 MAINSOURCES=	bltinmodule  cgensupport  errors  getcwd    import      pythonmain  structmember  traceback \
 				ceval        compile      fmod    graminit  modsupport  strerror    sysmodule
@@ -394,7 +394,7 @@ SOURCES=       $(LIBSOURCES) Python/pythonmain.c Modules/config.c
 
 python:                libpython.a $(OBJECTS) $(LIBDEPS) Makefile
 	$(CC) $(CFLAGS) $(OBJECTS) $(LIBS) -o @python.elf
-	mv @python.elf python
+	mv @python.elf bin/python
 
 libpython.a:   $(LIBOBJECTS)
 	-rm -f @lib.ar
@@ -444,7 +444,7 @@ tags:          $(SOURCES) $(GENSOURCES) $(HEADERS)
 	$(CTAGS) $(SOURCES) $(GENSOURCES) $(HEADERS)
 
 clean::
-	-rm -f *.o core [,#@]*
+	-rm -f obj/*.o obj/**/*.o core [,#@]*
 
 clobber::      clean
 	-rm -f python python_gen libpython.a tags

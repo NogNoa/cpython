@@ -50,10 +50,10 @@ initargs(p_argc, p_argv)
 void
 initcalls()
 {
-	inittime();
+	/*inittime();
 	initmath();
 	initregexp();
-	initposix();
+	initposix();*/
 
 #ifdef USE_AUDIO
 	initaudio();

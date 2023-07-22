@@ -4,7 +4,7 @@
 #define DEL(obj) (free(obj))
 #define RESIZE(item, type, ob_size) (item = (type*) realloc(item, ob_size))
 
-#define XDEL(obj) if ((op) == NULL) ; else DEL(obj)
+#define XDEL(obj) if ((obj) == NULL) ; else DEL(obj)
 
 #define ANY void
 
