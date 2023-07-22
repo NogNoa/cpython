@@ -122,6 +122,29 @@ ins1(self, where, v)
 	return 0;
 }
 
+static int
+rem(self, where)
+	listobject *self;
+	int where;
+{
+	int i;
+	object *v;
+	object **items;
+	items = self->ob_item;
+	v = items[where];
+	self->ob_size--;
+	if (where < 0)
+		where = 0;
+	if (where > self->ob_size)
+		where = self->ob_size;
+	for (i = self->ob_size; i >= where; --i)
+		items[i] = items[i+1];
+	RESIZE(items, object *, self->ob_size);
+	DECREF(v);
+	self->ob_item = items;
+	return 0;
+}
+
 int
 inslistitem(op, where, newitem)
 	object *op;
@@ -146,6 +169,18 @@ addlistitem(op, newitem)
 	}
 	return ins1((listobject *)op,
 		(int) ((listobject *)op)->ob_size, newitem);
+}
+
+int
+remlistitem(op, where)
+	object *op;
+	int where;
+{
+	if (!is_listobject(op)) {
+		err_badcall();
+		return -1;
+	}
+	return rem((listobject *)op, where);
 }
 
 /* Methods */

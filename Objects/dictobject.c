@@ -164,12 +164,15 @@ int where;
 		err_badcall();
 		return -1;
 	}
-	entr = entries[where];
 	remlistitem(self->dict_key, where);
-	DECREF(entr);
-	RESIZE(entries, object *, self->ob_size-1);
-	self->ob_item = entries;
+	entr = entries[where];
 	self->ob_size--;
+	for (; where < self->ob_size; where++) {
+		entries[where] = entries[where+1];
+	}
+	DECREF(entr);
+	RESIZE(entries, object *, self->ob_size);
+	self->ob_item = entries;
 	return 0;
 }
 
