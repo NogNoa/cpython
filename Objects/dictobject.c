@@ -3,13 +3,9 @@
 #include "exmalloc.h"
 
 typedef struct {
-	char *key;
-	object *value;
-} entry;
-
-typedef struct {
 	OB_VARHEAD
-	entry **ob_item;
+	listobject *dict_keys;
+	object **ob_item;
 } dictobject;
 
 
@@ -21,6 +17,7 @@ newdictobject(void)
 	if (op == NULL) {
 		return err_nomem();
 	}
+	op->dict_keys = newlistobject();
 	op->ob_item = NULL;
 	NEWREF(op);
 	op->ob_type = &Dicttype;
@@ -34,14 +31,14 @@ dict_dealloc(op)
 	dictobject *op;
 {
 	int i;
-	for (i = 0; i < op->ob_size; i++) {
-		if (op->ob_item[i] != NULL)
-			free(op->ob_item[i]->key);
-			DECREF(op->ob_item[i]->value);
-			free(op->ob_item[i]);
-	}
-	if (op->ob_item != NULL)
+	DECREF(op->dict_keys)
+	if (op->ob_item != NULL) {
+		for (i = 0; i < op->ob_size; i++) {
+			if (op->ob_item[i] != NULL)
+				{free(op->ob_item[i]);}
+		}
 		free((ANY *)op->ob_item);
+	}
 	free((ANY *)op);
 }
 
