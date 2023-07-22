@@ -4,7 +4,7 @@
 
 typedef struct {
 	OB_VARHEAD
-	listobject *dict_keys;
+	object *dict_key; //listobject
 	object **ob_item;
 } dictobject;
 
@@ -17,7 +17,7 @@ newdictobject(void)
 	if (op == NULL) {
 		return err_nomem();
 	}
-	op->dict_keys = newlistobject();
+	op->dict_key = newlistobject(0);
 	op->ob_item = NULL;
 	NEWREF(op);
 	op->ob_type = &Dicttype;
@@ -31,14 +31,13 @@ dict_dealloc(op)
 	dictobject *op;
 {
 	int i;
-	DECREF(op->dict_keys)
-	if (op->ob_item != NULL) {
-		for (i = 0; i < op->ob_size; i++) {
-			if (op->ob_item[i] != NULL)
-				{free(op->ob_item[i]);}
-		}
-		free((ANY *)op->ob_item);
+	DECREF(op->dict_key);
+	for (i = 0; i < op->ob_size; i++) {
+		if (op->ob_item[i] != NULL)
+			free(op->ob_item[i]);
 	}
+	if (op->ob_item != NULL)
+		free((ANY *)op->ob_item);
 	free((ANY *)op);
 }
 
@@ -49,7 +48,7 @@ keylookup(dp, key)
 {
 	int i;
 	for (i = 0; i < dp->ob_size; i++) {
-		if (!strcmp(key, dp->ob_item[i]->key))
+		if (!strcmp(key, (char *) getlistitem(dp->dict_key, i)))
 			return i;
 	}
 	return -1;
@@ -71,7 +70,7 @@ dictlookup(dp, key)
 	}
 	i = keylookup(dct, key);
 	if (i >= 0)
-		{return dct->ob_item[i]->value;}
+		{return dct->ob_item[i];}
 	else {
 		err_setstr(KeyError, key);
 		return NULL;
@@ -80,18 +79,19 @@ dictlookup(dp, key)
 
 
 static int
-ins(self, entr)
+ins(self, key, item)
 	dictobject *self;
-	entry *entr;
+	char *key;
+	object *item;
 {
 	int where;
-	entry **entries;
-	if (entr == NULL) {
+	object **entries;
+	if (key == NULL || item == NULL) {
 		err_badcall();
 		return -1;
 	}
 	entries = self->ob_item;
-	RESIZE(entries, entry *, self->ob_size+1);
+	RESIZE(entries, object *, self->ob_size+1);
 	if (entries == NULL) {
 		err_nomem();
 		return -1;
@@ -99,25 +99,27 @@ ins(self, entr)
 	where = (int) self->ob_size;
 	if (where < 0)
 		where = 0;
-	entries[where] = entr;
+	addlistitem(self->dict_key, (object *)key); //I guess
+	entries[where] = item;
 	self->ob_item = entries;
+	INCREF(item);
 	self->ob_size++;
 	return 0;
 }
 
 static int
-replace(self, entr, item)
+replace(self, where, item)
 	dictobject *self;
-	entry *entr;
+	int where;
 	object *item;
 {
-	entry **entries = self->ob_item;
-	if (entr == NULL) {
+	object **entries = self->ob_item;
+	if (where >= self->ob_size) {
 		err_badcall();
 		return -1;
 	}
-	DECREF(entr->value);
-	entr->value = item;
+	DECREF(entries[where]);
+	entries[where] = item;
 	INCREF(item);
 	self->ob_item = entries;
 	return 0;
@@ -129,7 +131,6 @@ dictinsert(dp, key, item)
 	char *key;
 {
 	int where;
-	entry *entr;
 	dictobject* dct;
 	if (!is_dictobject(dp)) {
 		err_badcall();
@@ -144,15 +145,10 @@ dictinsert(dp, key, item)
 	}
 	where = keylookup(dct, key);
 	if (where >= 0) {
-		entr = dct->ob_item[where]; //dest_entr
-		return replace(dct, entr, item);
+		return replace(dct, where, item);
 	}
 	else {
-		entr = NEW(entry, sizeof(entry *)); //new_entr
-		INCREF(item);
-		entr->key = key;
-		entr->value = item;
-		return ins(dct, entr);
+		return ins(dct, key, item);
 	}
 }
 
@@ -162,21 +158,16 @@ rem(self, where)
 dictobject *self;
 int where;
 {
-	entry **entries = self->ob_item;
-	entry *entr;
+	object **entries = self->ob_item;
+	object *entr;
 	if (where < 0 || self->ob_size < where) {
-		err_badarg();
+		err_badcall();
 		return -1;
 	}
 	entr = entries[where];
-	free(entr->key);
-	DECREF(entr->value);
-	free(entr);
-	RESIZE(entries, entry *, self->ob_size-1);
-	if (entries == NULL) {
-		err_nomem();
-		return -1;
-	}
+	remlistitem(self->dict_key, where);
+	DECREF(entr);
+	RESIZE(entries, object *, self->ob_size-1);
 	self->ob_item = entries;
 	self->ob_size--;
 	return 0;
@@ -224,16 +215,12 @@ getdictkey(dp, i)
 	object *dp;
 	int i;
 {
-	entry **entries;
-	entry *entr;
-	dictobject * dct = (dictobject *) dp;
+	dictobject *dct = (dictobject *) dp;
 	if (i < 0 || dct->ob_size < i) {
 		err_badarg();
 		return NULL;
 	}
-	entries = dct->ob_item;
-	entr = entries[i];
-	return entr->key;
+	return (char *) getlistitem(dct->dict_key, i);
 }
 
 
@@ -246,8 +233,8 @@ dict_print(op, fp, flags)
 	int i;
 	fprintf(fp, "{");
 	for (i = 0; i < op->ob_size && !StopPrint; i++) {
-		fprintf(fp, "%s: ", op->ob_item[i]->key);
-		printobject(op->ob_item[i]->value, fp, flags);
+		fprintf(fp, "%s: ", (char *) getlistitem(op->dict_key, i));
+		printobject(op->ob_item[i], fp, flags);
 		fprintf(fp, (i < op->ob_size-1) ? ", " : "}");
 	}
 }
@@ -264,8 +251,8 @@ dict_repr(op)
 	colon = newstringobject(": ");
 	t = newstringobject("}");
 	for (i = 0; i < op->ob_size && s != NULL; i++) {
-		k = newstringobject(op->ob_item[i]->key);
-		v = reprobject(op->ob_item[i]->value);
+		k = newstringobject((char *) getlistitem(op->dict_key, i));
+		v = reprobject(op->ob_item[i]);
 		joinstring(&k, colon);
 		joinstring(&v, (i < op->ob_size-1) ? comma : t);
 		joinstring(&k, v);
