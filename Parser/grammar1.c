@@ -1,5 +1,7 @@
 /* Grammar subroutines needed by parser */
 
+#include <stdlib.h>
+
 #include "pgenheaders.h"
 #include "assert.h"
 #include "grammar.h"

@@ -6,7 +6,6 @@
 #include "PROTO.h"
 #include "exmalloc.h"
 #include "tokenizer.h"
-#include "node.h"
 #include "grammar.h"
 #include "parser.h"
 #include "parsetok.h"

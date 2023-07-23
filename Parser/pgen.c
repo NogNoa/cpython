@@ -54,7 +54,7 @@ newnfa(name)
 	char *name;
 {
 	nfa *nf;
-	static type = NT_OFFSET; /* All types will be disjunct */
+	static int type = NT_OFFSET; /* All types will be disjunct */
 	
 	nf = NEW(nfa, 1);
 	if (nf == NULL)
@@ -132,7 +132,7 @@ metacompile(n)
 	return gr;
 }
 
-static
+static void
 compile_rule(gr, n)
 	nfagrammar *gr;
 	node *n;
@@ -153,7 +153,7 @@ compile_rule(gr, n)
 	REQ(n, NEWLINE);
 }
 
-static
+static void
 compile_rhs(ll, nf, n, pa, pb)
 	labellist *ll;
 	nfa *nf;
@@ -190,7 +190,7 @@ compile_rhs(ll, nf, n, pa, pb)
 	}
 }
 
-static
+static void
 compile_alt(ll, nf, n, pa, pb)
 	labellist *ll;
 	nfa *nf;
@@ -221,7 +221,7 @@ compile_alt(ll, nf, n, pa, pb)
 	}
 }
 
-static
+static void
 compile_item(ll, nf, n, pa, pb)
 	labellist *ll;
 	nfa *nf;
@@ -262,7 +262,7 @@ compile_item(ll, nf, n, pa, pb)
 	}
 }
 
-static
+static void
 compile_atom(ll, nf, n, pa, pb)
 	labellist *ll;
 	nfa *nf;
@@ -270,7 +270,7 @@ compile_atom(ll, nf, n, pa, pb)
 	int *pa, *pb;
 {
 	int i;
-	
+
 	REQ(n, ATOM);
 	i = n->n_nchildren;
 	REQN(i, 1);
@@ -334,7 +334,7 @@ dumpnfa(ll, nf)
 
 /* PART TWO -- CONSTRUCT DFA -- Algorithm 3.1 from [Aho&Ullman 77] */
 
-static int
+static void
 addclosure(ss, nf, istate)
 	bitset ss;
 	nfa *nf;
@@ -358,7 +358,7 @@ typedef struct _ss_dfa {
 	ss_state *sd_state;
 } ss_dfa;
 
-static
+static void
 makedfa(gr, nf, d)
 	nfagrammar *gr;
 	nfa *nf;
@@ -464,7 +464,7 @@ makedfa(gr, nf, d)
 	/* XXX cleanup */
 }
 
-static
+static void
 printssdfa(xx_nstates, xx_state, nbits, ll, msg)
 	int xx_nstates;
 	ss_state *xx_state;
@@ -545,13 +545,13 @@ renamestates(xx_nstates, xx_state, from, to)
 	}
 }
 
-static
+static void
 simplify(xx_nstates, xx_state)
 	int xx_nstates;
 	ss_state *xx_state;
 {
 	int changes;
-	int i, j, k;
+	int i, j;
 	
 	do {
 		changes = 0;
@@ -577,7 +577,7 @@ simplify(xx_nstates, xx_state)
 
 /* Convert the DFA into a grammar that can be used by our parser */
 
-static
+static void
 convert(d, xx_nstates, xx_state)
 	dfa *d;
 	int xx_nstates;

@@ -68,7 +68,7 @@ addstate(d)
 void
 addarc(d, from, to, lbl)
 	dfa *d;
-	int lbl;
+	int from, to, lbl;
 {
 	state *s;
 	arc *a;
@@ -117,7 +117,6 @@ findlabel(ll, type, str)
 	char *str;
 {
 	int i;
-	label *lb;
 	
 	for (i = 0; i < ll->ll_nlabels; i++) {
 		if (ll->ll_label[i].lb_type == type /*&&

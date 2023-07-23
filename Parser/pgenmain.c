@@ -8,9 +8,10 @@
    Error messages and status info during the generation process are
    written to stdout, or sometimes to stderr. */
 
+#include <stdlib.h>
+
 #include "pgenheaders.h"
 #include "grammar.h"
-#include "node.h"
 #include "parsetok.h"
 #include "pgen.h"
 
@@ -29,7 +30,6 @@ main(argc, argv)
 	char **argv;
 {
 	grammar *g;
-	node *n;
 	FILE *fp;
 	char *filename;
 	

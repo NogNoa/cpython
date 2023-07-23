@@ -6,7 +6,7 @@ typedef BYTE *bitset;
 
 bitset newbitset PROTO((int nbits));
 void delbitset PROTO((bitset bs));
-/* int testbit PROTO((bitset bs, int ibit)); /* Now a macro, see below */
+// int testbit PROTO((bitset bs, int ibit)); /* Now a macro, see below */
 int addbit PROTO((bitset bs, int ibit)); /* Returns 0 if already set */
 int samebitset PROTO((bitset bs1, bitset bs2, int nbits));
 void mergebitset PROTO((bitset bs1, bitset bs2, int nbits));

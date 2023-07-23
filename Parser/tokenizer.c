@@ -3,10 +3,11 @@
 /* XXX This is rather old, should be restructured perhaps */
 /* XXX Need a better interface to report errors than writing to stderr */
 /* XXX Should use editor resource to fetch true tab size on Macintosh */
+#include <ctype.h>
+#include <stdlib.h>
 
 #include "pgenheaders.h"
 
-#include <ctype.h>
 #include "string.h"
 
 #include "fgetsintr.h"

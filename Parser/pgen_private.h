@@ -1,7 +1,11 @@
 #include "PROTO.h"
-#include "node.h"
 #include "grammar.h"
 #include "bitset.h"
+
+#ifndef NODE
+	#include "node.h"
+	#define NODE
+#endif
 
 /* PART ONE -- CONSTRUCT NFA -- Cf. Algorithm 3.2 from [Aho&Ullman 77] */
 
@@ -31,11 +35,11 @@ typedef struct _nfagrammar {
 
 
 /* compile functions */
-static compile_item PROTO((labellist *, nfa *, node *, int *, int*));
-static compile_alt  PROTO((labellist *, nfa *, node *, int *, int*));
-static compile_atom PROTO((labellist *, nfa *, node *, int *, int*));
-static compile_rhs  PROTO((labellist *, nfa *, node *, int *, int*));
-static compile_rule PROTO((nfagrammar *, node *));
+static void compile_item PROTO((labellist *, nfa *, node *, int *, int*));
+static void compile_alt  PROTO((labellist *, nfa *, node *, int *, int*));
+static void compile_atom PROTO((labellist *, nfa *, node *, int *, int*));
+static void compile_rhs  PROTO((labellist *, nfa *, node *, int *, int*));
+static void compile_rule PROTO((nfagrammar *, node *));
 /* =================== */
 
 /* PART TWO -- CONSTRUCT DFA -- Algorithm 3.1 from [Aho&Ullman 77] */
@@ -56,6 +60,6 @@ typedef struct _ss_state {
 } ss_state;
 
 /* state funcitons */
-static convert PROTO((dfa *, int, ss_state *));
-static simplify PROTO((int, ss_state *));
-static printssdfa PROTO((int, ss_state *, int, labellist *, char *));
+static void convert PROTO((dfa *, int, ss_state *));
+static void simplify PROTO((int, ss_state *));
+static void printssdfa PROTO((int, ss_state *, int, labellist *, char *));
