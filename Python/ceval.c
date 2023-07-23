@@ -1,5 +1,7 @@
 /* Execute compiled code */
 
+#include <stdlib.h>
+
 #include "allobjects.h"
 
 #include "import.h"
@@ -10,6 +12,7 @@
 #include "opcode.h"
 #include "bltinmodule.h"
 #include "traceback.h"
+#include "intrcheck.h"
 
 #ifndef NDEBUG
 #define TRACE
@@ -508,6 +511,7 @@ cmp_outcome(op, v, w)
 		case NE: res = cmp != 0; break;
 		case GT: res = cmp >  0; break;
 		case GE: res = cmp >= 0; break;
+		default:;
 		/* XXX no default? (res is initialized to 0 though) */
 		}
 	}
@@ -673,7 +677,7 @@ eval_code(co, globals, locals, arg)
 	lineno = -1;
 	
 	for (;;) {
-		static ticker;
+		static int ticker;
 		
 		/* Do periodic things */
 		
@@ -1347,8 +1351,8 @@ eval_code(co, globals, locals, arg)
 				break;
 			}
 			if (b->b_type == SETUP_FINALLY ||
-					b->b_type == SETUP_EXCEPT &&
-					why == WHY_EXCEPTION) {
+					(b->b_type == SETUP_EXCEPT &&
+						why == WHY_EXCEPTION)) {
 				if (why == WHY_EXCEPTION) {
 					object *exc, *val;
 					err_get(&exc, &val);

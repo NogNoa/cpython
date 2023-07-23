@@ -13,11 +13,14 @@ Data members:
 - ps1, ps2: optional primary and secondary prompts (strings)
 */
 
+#include <stdlib.h>
+
 #include "allobjects.h"
 
 #include "sysmodule.h"
 #include "import.h"
 #include "modsupport.h"
+#include "pythonrun.h"
 
 /* Define delimiter used in $PYTHONPATH */
 

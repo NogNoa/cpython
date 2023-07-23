@@ -6,16 +6,17 @@
    XXX Include function name in code (and module names?)
 */
 
+#include <stdlib.h>
+#include <ctype.h>
+
 #include "allobjects.h"
 
-#include "node.h"
 #include "token.h"
 #include "graminit.h"
 #include "compile.h"
 #include "opcode.h"
 #include "structmember.h"
 
-#include <ctype.h>
 
 #define OFF(x) offsetof(codeobject, x)
 

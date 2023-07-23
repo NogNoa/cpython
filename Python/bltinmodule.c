@@ -2,7 +2,6 @@
 
 #include "allobjects.h"
 
-#include "node.h"
 #include "graminit.h"
 #include "errcode.h"
 #include "sysmodule.h"

@@ -16,6 +16,7 @@
 #include "allobjects.h"
 #include "modsupport.h"
 
+extern void fatal PROTO((char *));
 extern char *strerror PROTO((int));
 
 #ifdef AMOEBA

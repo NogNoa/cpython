@@ -4,6 +4,7 @@
 #include "modsupport.h"
 #include "import.h"
 
+extern void fatal PROTO((char *));
 
 object *
 initmodule(name, methods)

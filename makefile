@@ -447,7 +447,7 @@ clean::
 	-rm -f obj/*.o obj/**/*.o core [,#@]*
 
 clobber::      clean
-	-rm -f python python_gen libpython.a tags
+	-rm -f bin/python python_gen libpython.a tags
 
 
 # Build Special Objects

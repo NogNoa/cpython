@@ -1,5 +1,10 @@
 /* Interfaces to parse and execute pieces of python code */
 
+#ifndef NODE
+	#include "node.h"
+	#define NODE
+#endif
+
 void initall PROTO((void));
 
 int run PROTO((FILE *, char *));
