@@ -21,3 +21,5 @@ object *run_node PROTO((struct _node *, char *, object *, object *));
 void print_error PROTO((void));
 
 void goaway PROTO((int));
+
+void fatal PROTO((char *));

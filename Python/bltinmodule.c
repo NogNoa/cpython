@@ -12,6 +12,7 @@
 #include "compile.h" /* For ceval.h */
 #include "ceval.h"
 #include "modsupport.h"
+#include "fgetsintr.h"
 
 
 static object *
@@ -114,7 +115,7 @@ builtin_divmod(self, v)
 		xdivy = xi / yi;
 	}
 	xmody = xi - xdivy*yi;
-	if (xmody < 0 && yi > 0 || xmody > 0 && yi < 0) {
+	if ((xmody < 0 && yi > 0) || (xmody > 0 && yi < 0)) {
 		xmody += yi;
 		xdivy -= 1;
 	}
@@ -151,8 +152,8 @@ exec_eval(v, start)
 		}
 	}
 	if (str == NULL || !is_stringobject(str) ||
-			globals != NULL && !is_dictobject(globals) ||
-			locals != NULL && !is_dictobject(locals)) {
+			(globals != NULL && !is_dictobject(globals)) ||
+			( locals != NULL && !is_dictobject( locals))) {
 		err_setstr(TypeError,
 		    "exec/eval arguments must be string[,dict[,dict]]");
 		return NULL;
@@ -203,8 +204,6 @@ builtin_input(self, v)
 {
 	FILE *in = sysgetfile("stdin", stdin);
 	FILE *out = sysgetfile("stdout", stdout);
-	node *n;
-	int err;
 	object *m, *d;
 	flushline();
 	if (v != NULL)
@@ -415,7 +414,6 @@ builtin_raw_input(self, v)
 {
 	FILE *in = sysgetfile("stdin", stdin);
 	FILE *out = sysgetfile("stdout", stdout);
-	char *p;
 	int err;
 	int n = 1000;
 	flushline();

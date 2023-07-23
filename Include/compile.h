@@ -6,6 +6,11 @@
    - a list of the constants,
    - and a list of the names used. */
 
+#ifndef NODE
+	#include "node.h"
+	#define NODE
+#endif
+
 typedef struct {
 	OB_HEAD
 	stringobject *co_code;	/* instruction opcodes */

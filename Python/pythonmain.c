@@ -5,7 +5,6 @@
 #include "allobjects.h"
 
 #include "grammar.h"
-#include "node.h"
 #include "parsetok.h"
 #include "graminit.h"
 #include "errcode.h"
@@ -14,14 +13,12 @@
 #include "ceval.h"
 #include "pythonrun.h"
 #include "import.h"
+#include "PROTO.h"
+#include "config.h"
+#include "intrcheck.h"
+#include "bltinmodule.h"
 
-extern char *getpythonpath();
-
-extern grammar gram; /* From graminit.c */
-
-#ifdef DEBUG
-int debugging; /* Needed by parser.c */
-#endif
+#include "pythonmain_private.h"
 
 int
 main(argc, argv)
@@ -363,7 +360,7 @@ goaway(sts)
 	/*NOTREACHED*/
 }
 
-static
+static void
 finaloutput()
 {
 #ifdef TRACE_REFS

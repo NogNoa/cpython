@@ -1,5 +1,7 @@
 /* Quick hack to get posix.getcwd() working for pure BSD 4.3 */
 
+#include <string.h>
+
 #include "sys/param.h"
 #include "errno.h"
 
