@@ -6,7 +6,7 @@
 #include "modsupport.h"
 #include "PROTO.h"
 
-static int list_ass_slice PROTO((listobject *, int, int , object *));
+static int list_ass_slice PROTO((object *, int, int , object *));
 
 object *
 newlistobject(size)
@@ -336,38 +336,44 @@ list_concat(a, bb)
 }
 
 static int
-list_ass_item(a, i, v)
-	object *a;
+list_ass_item(o, i, v)
+	object *o;
 	int i;
 	object *v;
 {
-	object** item;
-	if (i < 0 || i >= ((listobject *) a)->ob_size) {
+	listobject *a;
+	if (is_listobject(o))
+		a = (listobject *) o;
+	else {
+		err_badarg();
+		return -1;
+	}
+	if (i < 0 || i >= a->ob_size) {
 		err_setstr(IndexError, "list assignment index out of range");
 		return -1;
 	}
 	if (v == NULL)
-		{return list_ass_slice(a, i, i+1, v);}
+		{return list_ass_slice(o, i, i+1, v);}
 	INCREF(v);
-	item = ((listobject *) a)->ob_item + i;
-	DECREF(*item);
-	*item = v;
+	DECREF(a->ob_item[i]);
+	a->ob_item[i] = v;
 	return 0;
 }
 
 static int
-list_ass_slice(a, ilow, ihigh, v)
-	listobject *a;
+list_ass_slice(o, ilow, ihigh, v)
+	object *o;
 	int ilow, ihigh;
 	object *v;
 {
+	listobject *a;
 	object **item;
 	int n; /* Size of replacement list */
 	int d; /* Change in size */
 	int k; /* Loop index */
 #define b ((listobject *)v)
-	if (is_listobject(a))
-		a = (listobject *) a;
+	if (is_listobject(o))
+		a = (listobject *) o;
 	else {
 		err_badarg();
 		return -1;
