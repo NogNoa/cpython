@@ -2,7 +2,6 @@
 
 #include "allobjects.h"
 
-#include "node.h"
 #include "token.h"
 #include "graminit.h"
 #include "import.h"

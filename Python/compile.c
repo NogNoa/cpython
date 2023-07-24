@@ -243,7 +243,7 @@ com_backpatch(c, anchor)
 {
 	unsigned char *code = (unsigned char *) getstringvalue(c->c_code);
 	int target = c->c_nexti;
-	int lastanchor = 0;
+	// int lastanchor = 0;
 	int dist;
 	int prev;
 	for (;;) {
@@ -254,7 +254,7 @@ com_backpatch(c, anchor)
 		code[anchor+1] = dist >> 8;
 		if (!prev)
 			break;
-		lastanchor = anchor;
+		// lastanchor = anchor;
 		anchor -= prev;
 	}
 }
@@ -413,7 +413,7 @@ com_list_constructor(c, n)
 {
 	int len;
 	int i;
-	object *v, *w;
+	// object *v, *w;
 	if (TYPE(n) != testlist)
 		REQ(n, exprlist);
 	/* exprlist: expr (',' expr)* [',']; likewise for testlist */
@@ -881,7 +881,7 @@ com_assign_trailer(c, n, assigning)
 	node *n;
 	int assigning;
 {
-	char *name;
+	// char *name;
 	REQ(n, trailer);
 	switch (TYPE(CHILD(n, 0))) {
 	case LPAR: /* '(' [exprlist] ')' */
@@ -1448,7 +1448,8 @@ com_bases(c, n)
 	struct compiling *c;
 	node *n;
 {
-	int i, nbases;
+	int i;
+	//int nbases;
 	REQ(n, baselist);
 	/*
 	baselist: atom arguments (',' atom arguments)*

@@ -1,6 +1,9 @@
 /* List object implementation */
 
+#include <stdlib.h>
+
 #include "allobjects.h"
+#include "modsupport.h"
 #include "PROTO.h"
 
 static int list_ass_slice PROTO((listobject *, int, int , object *));
@@ -74,20 +77,20 @@ setlistitem(op, i, newitem)
 	register object *olditem;
 	if (!is_listobject(op)) {
 		if (newitem != NULL)
-			DECREF(newitem);
+			{DECREF(newitem);}
 		err_badcall();
 		return -1;
 	}
 	if (i < 0 || i >= ((listobject *)op) -> ob_size) {
 		if (newitem != NULL)
-			DECREF(newitem);
+			{DECREF(newitem);}
 		err_setstr(IndexError, "list assignment index out of range");
 		return -1;
 	}
 	olditem = ((listobject *)op) -> ob_item[i];
 	((listobject *)op) -> ob_item[i] = newitem;
 	if (olditem != NULL)
-		DECREF(olditem);
+		{DECREF(olditem);}
 	return 0;
 }
 
@@ -110,9 +113,9 @@ ins1(self, where, v)
 		return -1;
 	}
 	if (where < 0)
-		where = 0;
+		{where = 0;}
 	if (where > self->ob_size)
-		where = self->ob_size;
+		{where = self->ob_size;}
 	for (i = self->ob_size; --i >= where; )
 		items[i+1] = items[i];
 	INCREF(v);
@@ -134,11 +137,11 @@ rem(self, where)
 	v = items[where];
 	self->ob_size--;
 	if (where < 0)
-		where = 0;
+		{where = 0;}
 	if (where > self->ob_size)
-		where = self->ob_size;
+		{where = self->ob_size;}
 	for (i = self->ob_size; i >= where; --i)
-		items[i] = items[i+1];
+		{items[i] = items[i+1];}
 	RESIZE(items, object *, self->ob_size);
 	DECREF(v);
 	self->ob_item = items;
@@ -192,10 +195,10 @@ list_dealloc(op)
 	int i;
 	for (i = 0; i < op->ob_size; i++) {
 		if (op->ob_item[i] != NULL)
-			DECREF(op->ob_item[i]);
+			{DECREF(op->ob_item[i]);}
 	}
 	if (op->ob_item != NULL)
-		free((ANY *)op->ob_item);
+		{free((ANY *)op->ob_item);}
 	free((ANY *)op);
 }
 
@@ -226,7 +229,7 @@ list_repr(v)
 	comma = newstringobject(", ");
 	for (i = 0; i < v->ob_size && s != NULL; i++) {
 		if (i > 0)
-			joinstring(&s, comma);
+			{joinstring(&s, comma);}
 		t = reprobject(v->ob_item[i]);
 		joinstring(&s, t);
 		DECREF(t);
@@ -247,7 +250,7 @@ list_compare(v, w)
 	for (i = 0; i < len; i++) {
 		int cmp = cmpobject(v->ob_item[i], w->ob_item[i]);
 		if (cmp != 0)
-			return cmp;
+			{return cmp;}
 	}
 	return v->ob_size - w->ob_size;
 }
@@ -280,18 +283,18 @@ list_slice(a, ilow, ihigh)
 	listobject *np;
 	int i;
 	if (ilow < 0)
-		ilow = 0;
+		{ilow = 0;}
 	else if (ilow > a->ob_size)
 		ilow = a->ob_size;
 	if (ihigh < 0)
-		ihigh = 0;
+		{ihigh = 0;}
 	if (ihigh < ilow)
-		ihigh = ilow;
+		{ihigh = ilow;}
 	else if (ihigh > a->ob_size)
-		ihigh = a->ob_size;
+		{ihigh = a->ob_size;}
 	np = (listobject *) newlistobject(ihigh - ilow);
 	if (np == NULL)
-		return NULL;
+		{return NULL;}
 	for (i = ilow; i < ihigh; i++) {
 		object *v = a->ob_item[i];
 		INCREF(v);
@@ -343,7 +346,7 @@ list_ass_item(a, i, v)
 		return -1;
 	}
 	if (v == NULL)
-		return list_ass_slice(a, i, i+1, v);
+		{return list_ass_slice(a, i, i+1, v);}
 	INCREF(v);
 	DECREF(a->ob_item[i]);
 	a->ob_item[i] = v;
@@ -351,8 +354,8 @@ list_ass_item(a, i, v)
 }
 
 static int
-list_ass_slice(a, ilow, ihigh, v)
-	listobject *a;
+list_ass_slice(o, ilow, ihigh, v)
+	object *o;
 	int ilow, ihigh;
 	object *v;
 {
@@ -361,8 +364,14 @@ list_ass_slice(a, ilow, ihigh, v)
 	int d; /* Change in size */
 	int k; /* Loop index */
 #define b ((listobject *)v)
+	if (is_listobject(o))
+		a = (listobject *) o;
+	else {
+		err_badarg();
+		return -1;
+	}
 	if (v == NULL)
-		n = 0;
+		{n = 0;}
 	else if (is_listobject(v))
 		n = b->ob_size;
 	else {
@@ -370,23 +379,23 @@ list_ass_slice(a, ilow, ihigh, v)
 		return -1;
 	}
 	if (ilow < 0)
-		ilow = 0;
+		{ilow = 0;}
 	else if (ilow > a->ob_size)
 		ilow = a->ob_size;
 	if (ihigh < 0)
-		ihigh = 0;
+		{ihigh = 0;}
 	if (ihigh < ilow)
-		ihigh = ilow;
+		{ihigh = ilow;}
 	else if (ihigh > a->ob_size)
-		ihigh = a->ob_size;
+		{ihigh = a->ob_size;}
 	item = a->ob_item;
 	d = n - (ihigh-ilow);
 	if (d <= 0) { /* Delete -d items; DECREF ihigh-ilow items */
 		for (k = ilow; k < ihigh; k++)
-			DECREF(item[k]);
+			{DECREF(item[k]);}
 		if (d < 0) {
 			for (/*k = ihigh*/; k < a->ob_size; k++)
-				item[k+d] = item[k];
+				{item[k+d] = item[k];}
 			a->ob_size += d;
 			RESIZE(item, object *, a->ob_size); /* Can't fail */
 			a->ob_item = item;
@@ -399,9 +408,9 @@ list_ass_slice(a, ilow, ihigh, v)
 			return -1;
 		}
 		for (k = a->ob_size; --k >= ihigh; )
-			item[k+d] = item[k];
+			{item[k+d] = item[k];}
 		for (/*k = ihigh-1*/; k >= ilow; --k)
-			DECREF(item[k]);
+			{DECREF(item[k]);}
 		a->ob_item = item;
 		a->ob_size += d;
 	}
@@ -421,7 +430,7 @@ ins(self, where, v)
 	object *v;
 {
 	if (ins1(self, where, v) != 0)
-		return NULL;
+		{return NULL;}
 	INCREF(None);
 	return None;
 }
@@ -437,7 +446,7 @@ listinsert(self, args)
 		return NULL;
 	}
 	if (!getintarg(gettupleitem(args, 0), &i))
-		return NULL;
+		{return NULL;}
 	return ins(self, i, gettupleitem(args, 1));
 }
 
@@ -466,11 +475,12 @@ listsort(self, args)
 		return NULL;
 	}
 	err_clear();
-	if (self->ob_size > 1)
+	if (self->ob_size > 1) {
 		qsort((char *)self->ob_item,
 				(int) self->ob_size, sizeof(object *), cmp);
+	}
 	if (err_occurred())
-		return NULL;
+		{return NULL;}
 	INCREF(None);
 	return None;
 }
@@ -485,7 +495,7 @@ sortlist(v)
 	}
 	v = listsort((listobject *)v, (object *)NULL);
 	if (v == NULL)
-		return -1;
+		{return -1;}
 	DECREF(v);
 	return 0;
 }

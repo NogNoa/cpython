@@ -33,9 +33,9 @@ static void
 class_dealloc(op)
 	classobject *op;
 {
-	int i;
+	// int i;
 	if (op->cl_bases != NULL)
-		DECREF(op->cl_bases);
+		{DECREF(op->cl_bases);}
 	DECREF(op->cl_methods);
 	free((ANY *)op);
 }
@@ -121,7 +121,7 @@ classmember_dealloc(cm)
 {
 	DECREF(cm->cm_class);
 	if (cm->cm_attr != NULL)
-		DECREF(cm->cm_attr);
+		{DECREF(cm->cm_attr);}
 	free((ANY *)cm);
 }
 

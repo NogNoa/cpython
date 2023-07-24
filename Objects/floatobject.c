@@ -75,6 +75,13 @@ float_buf_repr(buf, v)
 }
 
 static void
+float_free(v)
+	floatobject *v;
+{
+	DEL(v);
+}
+
+static void
 float_print(v, fp, flags)
 	floatobject *v;
 	FILE *fp;
@@ -228,7 +235,7 @@ typeobject Floattype = {
 	"float",
 	sizeof(floatobject),
 	0,
-	free,			/*tp_dealloc*/
+	float_free,			/*tp_dealloc*/
 	float_print,		/*tp_print*/
 	0,			/*tp_getattr*/
 	0,			/*tp_setattr*/
