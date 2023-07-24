@@ -337,25 +337,27 @@ list_concat(a, bb)
 
 static int
 list_ass_item(a, i, v)
-	listobject *a;
+	object *a;
 	int i;
 	object *v;
 {
-	if (i < 0 || i >= a->ob_size) {
+	object** item;
+	if (i < 0 || i >= ((listobject *) a)->ob_size) {
 		err_setstr(IndexError, "list assignment index out of range");
 		return -1;
 	}
 	if (v == NULL)
 		{return list_ass_slice(a, i, i+1, v);}
 	INCREF(v);
-	DECREF(a->ob_item[i]);
-	a->ob_item[i] = v;
+	item = ((listobject *) a)->ob_item + i;
+	DECREF(*item);
+	*item = v;
 	return 0;
 }
 
 static int
-list_ass_slice(o, ilow, ihigh, v)
-	object *o;
+list_ass_slice(a, ilow, ihigh, v)
+	listobject *a;
 	int ilow, ihigh;
 	object *v;
 {
@@ -364,8 +366,8 @@ list_ass_slice(o, ilow, ihigh, v)
 	int d; /* Change in size */
 	int k; /* Loop index */
 #define b ((listobject *)v)
-	if (is_listobject(o))
-		a = (listobject *) o;
+	if (is_listobject(a))
+		a = (listobject *) a;
 	else {
 		err_badarg();
 		return -1;
