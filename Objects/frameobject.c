@@ -1,5 +1,7 @@
 /* Frame object implementation */
 
+#include <stdlib.h>
+
 #include "allobjects.h"
 
 #include "compile.h"

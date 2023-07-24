@@ -6,6 +6,12 @@
 static int use_stdwin;
 #endif
 
+#include "PROTO.h"
+
+void inittime PROTO((void));
+void initmath PROTO((void));
+void initposix PROTO((void));
+
 /*ARGSUSED*/
 void
 initargs(p_argc, p_argv)

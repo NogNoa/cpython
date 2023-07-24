@@ -16,6 +16,14 @@ typedef unsigned long time_t;
 extern time_t time();
 #endif /* !__STDC__ */
 
+#ifdef THINK_C
+	#include "PROTO.h"
+	static void sleep PROTO((int msecs));
+#else
+	#ifdef unix
+	#include <unistd.h>
+	#endif
+#endif
 
 /* Time methods */
 

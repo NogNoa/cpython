@@ -53,9 +53,9 @@ module_dealloc(m)
 	moduleobject *m;
 {
 	if (m->md_name != NULL)
-		DECREF(m->md_name);
+		{DECREF(m->md_name);}
 	if (m->md_dict != NULL)
-		DECREF(m->md_dict);
+		{DECREF(m->md_dict);}
 	free((char *)m);
 }
 

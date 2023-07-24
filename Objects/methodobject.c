@@ -57,7 +57,7 @@ meth_dealloc(m)
 	methodobject *m;
 {
 	if (m->m_self != NULL)
-		DECREF(m->m_self);
+		{DECREF(m->m_self);}
 	free((char *)m);
 }
 

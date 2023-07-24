@@ -15,12 +15,12 @@ newtupleobject(size)
 	op = (tupleobject *)
 		malloc(sizeof(tupleobject) + size * sizeof(object *));
 	if (op == NULL)
-		return err_nomem();
+		{return err_nomem();}
 	NEWREF(op);
 	op->ob_type = &Tupletype;
 	op->ob_size = size;
 	for (i = 0; i < size; i++)
-		op->ob_item[i] = NULL;
+		{op->ob_item[i] = NULL;}
 	return (object *) op;
 }
 
@@ -33,7 +33,7 @@ gettuplesize(op)
 		return -1;
 	}
 	else
-		return ((tupleobject *)op)->ob_size;
+		{return ((tupleobject *)op)->ob_size;}
 }
 
 object *
@@ -61,20 +61,20 @@ settupleitem(op, i, newitem)
 	register object *olditem;
 	if (!is_tupleobject(op)) {
 		if (newitem != NULL)
-			DECREF(newitem);
+			{DECREF(newitem);}
 		err_badcall();
 		return -1;
 	}
 	if (i < 0 || i >= ((tupleobject *)op) -> ob_size) {
 		if (newitem != NULL)
-			DECREF(newitem);
+			{DECREF(newitem);}
 		err_setstr(IndexError, "tuple assignment index out of range");
 		return -1;
 	}
 	olditem = ((tupleobject *)op) -> ob_item[i];
 	((tupleobject *)op) -> ob_item[i] = newitem;
 	if (olditem != NULL)
-		DECREF(olditem);
+		{DECREF(olditem);}
 	return 0;
 }
 
@@ -87,7 +87,7 @@ tupledealloc(op)
 	register int i;
 	for (i = 0; i < op->ob_size; i++) {
 		if (op->ob_item[i] != NULL)
-			DECREF(op->ob_item[i]);
+			{DECREF(op->ob_item[i]);}
 	}
 	free((ANY *)op);
 }
@@ -102,12 +102,12 @@ tupleprint(op, fp, flags)
 	fprintf(fp, "(");
 	for (i = 0; i < op->ob_size && !StopPrint; i++) {
 		if (i > 0) {
-			fprintf(fp, ", ");
+			{fprintf(fp, ", ");}
 		}
 		printobject(op->ob_item[i], fp, flags);
 	}
 	if (op->ob_size == 1)
-		fprintf(fp, ",");
+		{fprintf(fp, ",");}
 	fprintf(fp, ")");
 }
 
@@ -121,11 +121,11 @@ tuplerepr(v)
 	comma = newstringobject(", ");
 	for (i = 0; i < v->ob_size && s != NULL; i++) {
 		if (i > 0)
-			joinstring(&s, comma);
+			{joinstring(&s, comma);}
 		t = reprobject(v->ob_item[i]);
 		joinstring(&s, t);
 		if (t != NULL)
-			DECREF(t);
+			{DECREF(t);}
 	}
 	DECREF(comma);
 	if (v->ob_size == 1) {
@@ -149,7 +149,7 @@ tuplecompare(v, w)
 	for (i = 0; i < len; i++) {
 		int cmp = cmpobject(v->ob_item[i], w->ob_item[i]);
 		if (cmp != 0)
-			return cmp;
+			{return cmp;}
 	}
 	return v->ob_size - w->ob_size;
 }
@@ -182,11 +182,11 @@ tupleslice(a, ilow, ihigh)
 	register tupleobject *np;
 	register int i;
 	if (ilow < 0)
-		ilow = 0;
+		{ilow = 0;}
 	if (ihigh > a->ob_size)
-		ihigh = a->ob_size;
+		{ihigh = a->ob_size;}
 	if (ihigh < ilow)
-		ihigh = ilow;
+		{ihigh = ilow;}
 	if (ilow == 0 && ihigh == a->ob_size) {
 		/* XXX can only do this if tuples are immutable! */
 		INCREF(a);
@@ -194,7 +194,7 @@ tupleslice(a, ilow, ihigh)
 	}
 	np = (tupleobject *)newtupleobject(ihigh - ilow);
 	if (np == NULL)
-		return NULL;
+		{return NULL;}
 	for (i = ilow; i < ihigh; i++) {
 		object *v = a->ob_item[i];
 		INCREF(v);
@@ -219,7 +219,7 @@ tupleconcat(a, bb)
 	size = a->ob_size + b->ob_size;
 	np = (tupleobject *) newtupleobject(size);
 	if (np == NULL) {
-		return err_nomem();
+		{return err_nomem();}
 	}
 	for (i = 0; i < a->ob_size; i++) {
 		object *v = a->ob_item[i];

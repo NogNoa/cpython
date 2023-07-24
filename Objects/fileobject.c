@@ -57,7 +57,7 @@ newfileobject(name, mode)
 	char *name, *mode;
 {
 	fileobject *f;
-	FILE *fp;
+	// FILE *fp;
 	f = (fileobject *) newopenfileobject((FILE *)NULL, name, mode);
 	if (f == NULL)
 		return NULL;
@@ -76,11 +76,11 @@ file_dealloc(f)
 	fileobject *f;
 {
 	if (f->f_fp != NULL)
-		fclose(f->f_fp);
+		{fclose(f->f_fp);}
 	if (f->f_name != NULL)
-		DECREF(f->f_name);
+		{DECREF(f->f_name);}
 	if (f->f_mode != NULL)
-		DECREF(f->f_mode);
+		{DECREF(f->f_mode);}
 	free((char *)f);
 }
 

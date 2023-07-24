@@ -11,6 +11,7 @@
 /* Xx objects */
 
 #include "allobjects.h"
+#include "modsupport.h"
 
 typedef struct {
 	OB_HEAD
