@@ -4,7 +4,7 @@
 
 typedef struct {
 	OB_VARHEAD
-	char *dict_key; //listobject
+	char **dict_key; //listobject
 	object **ob_item;
 } dictobject;
 
@@ -160,7 +160,7 @@ dictobject *self;
 int where;
 {
 	object **entries = self->ob_item;
-	chr **keys = self->dict_key;
+	char **keys = self->dict_key;
 	if (where < 0 || self->ob_size < where) {
 		err_badcall();
 		return -1;
@@ -238,12 +238,17 @@ keylist(dp)
 	dictobject *dp;
 {
 	int i;
-	if (!ob_size || !dp->dict_key)
-		{return newlistobject(0);}
-	for (i;i<)
+	object *back = newlistobject(0);
+	object *str;
+	for (i=0;i < dp->ob_size; i++)
+	{
+		str = newstringobject(dp->dict_key[i]);
+		addlistitem(back, str);
+	}
+	return back;
 }
 
-object *
+object * //listobject*
 getdictkeys(dp)
 	object *dp;
 {
@@ -253,7 +258,7 @@ getdictkeys(dp)
 	}
 	else {
 		dictobject *dct = (dictobject *) dp;
-		return dct->dict_key;
+		return keylist(dct);
 	}
 
 }
@@ -267,7 +272,7 @@ dict_print(op, fp, flags)
 	int i;
 	fprintf(fp, "{");
 	for (i = 0; i < op->ob_size && !StopPrint; i++) {
-		fprintf(fp, "%s: ", (char *) getlistitem(op->dict_key, i));
+		fprintf(fp, "%s: ", op->dict_key[i]);
 		printobject(op->ob_item[i], fp, flags);
 		fprintf(fp, (i < op->ob_size-1) ? ", " : "}");
 	}
@@ -285,7 +290,7 @@ dict_repr(op)
 	colon = newstringobject(": ");
 	t = newstringobject("}");
 	for (i = 0; i < op->ob_size && s != NULL; i++) {
-		k = newstringobject((char *) getlistitem(op->dict_key, i));
+		k = newstringobject(op->dict_key[i]);
 		v = reprobject(op->ob_item[i]);
 		joinstring(&k, colon);
 		joinstring(&v, (i < op->ob_size-1) ? comma : t);
