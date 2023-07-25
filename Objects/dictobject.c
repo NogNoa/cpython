@@ -4,7 +4,7 @@
 
 typedef struct {
 	OB_VARHEAD
-	object *dict_key; //listobject
+	char *dict_key; //listobject
 	object **ob_item;
 } dictobject;
 
@@ -17,7 +17,7 @@ newdictobject(void)
 	if (op == NULL) {
 		return err_nomem();
 	}
-	op->dict_key = newlistobject(0);
+	op->dict_key = NULL;
 	op->ob_item = NULL;
 	NEWREF(op);
 	op->ob_type = &Dicttype;
@@ -31,8 +31,9 @@ dict_dealloc(op)
 	dictobject *op;
 {
 	int i;
-	DECREF(op->dict_key);
 	for (i = 0; i < op->ob_size; i++) {
+		if (op->dict_key[i] != NULL)
+			free(op->dict_key[i]);
 		if (op->ob_item[i] != NULL)
 			free(op->ob_item[i]);
 	}
@@ -48,7 +49,7 @@ keylookup(dp, key)
 {
 	int i;
 	for (i = 0; i < dp->ob_size; i++) {
-		if (!strcmp(key, (char *) getlistitem(dp->dict_key, i)))
+		if (!strcmp(key, dp->dict_key[i]))
 			return i;
 	}
 	return -1;
@@ -99,7 +100,7 @@ ins(self, key, item)
 	where = (int) self->ob_size;
 	if (where < 0)
 		where = 0;
-	addlistitem(self->dict_key, (object *)key); //I guess
+	self->dict_key[where] = key;
 	entries[where] = item;
 	self->ob_item = entries;
 	INCREF(item);
@@ -159,18 +160,18 @@ dictobject *self;
 int where;
 {
 	object **entries = self->ob_item;
-	object *entr;
+	chr **keys = self->dict_key;
 	if (where < 0 || self->ob_size < where) {
 		err_badcall();
 		return -1;
 	}
-	remlistitem(self->dict_key, where);
-	entr = entries[where];
 	self->ob_size--;
 	for (; where < self->ob_size; where++) {
 		entries[where] = entries[where+1];
 	}
-	DECREF(entr);
+	DEL(keys[where]);
+	DECREF(entries[where]);
+	RESIZE(keys, char *, self->ob_size);
 	RESIZE(entries, object *, self->ob_size);
 	self->ob_item = entries;
 	return 0;
@@ -229,7 +230,17 @@ getdictkey(dp, i)
 		err_badarg();
 		return NULL;
 	}
-	return (char *) getlistitem(dct->dict_key, i);
+	return dct->dict_key[i];
+}
+
+static object * //listobject*
+keylist(dp)
+	dictobject *dp;
+{
+	int i;
+	if (!ob_size || !dp->dict_key)
+		{return newlistobject(0);}
+	for (i;i<)
 }
 
 object *
