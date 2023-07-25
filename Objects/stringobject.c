@@ -61,6 +61,13 @@ getstringvalue(op)
 /* Methods */
 
 static void
+stringfree(v)
+	stringobject *v;
+{
+	DEL(v);
+}
+
+static void
 stringprint(op, fp, flags)
 	stringobject *op;
 	FILE *fp;
@@ -253,7 +260,7 @@ typeobject Stringtype = {
 	"string",
 	sizeof(stringobject),
 	sizeof(char),
-	free,		/*tp_dealloc*/
+	stringfree,		/*tp_dealloc*/
 	stringprint,	/*tp_print*/
 	0,		/*tp_getattr*/
 	0,		/*tp_setattr*/

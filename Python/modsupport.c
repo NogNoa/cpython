@@ -254,7 +254,7 @@ getpointstrarg(v, a, b)
 int
 getstrintintarg(v, a, b, c)
 	object *v;
-	object *a;
+	object **a;
 	int *b, *c;
 {
 	if (v == NULL || !is_tupleobject(v) || gettuplesize(v) != 3) {

@@ -6,7 +6,7 @@
 extern int sys_nerr;
 extern const char *const sys_errlist[];
 
-char *
+const char *
 strerror(err)
 	int err;
 {

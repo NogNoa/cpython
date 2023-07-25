@@ -5,7 +5,7 @@
 #include <string.h>
 
 #ifdef THINK_C
-/* #define THINK_C_3_0			/*** TURN THIS ON FOR THINK C 3.0 ****/
+// #define THINK_C_3_0			/*** TURN THIS ON FOR THINK C 3.0 ****/
 #define label label_
 #undef label
 #endif
