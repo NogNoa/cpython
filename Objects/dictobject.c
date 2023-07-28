@@ -86,25 +86,29 @@ ins(self, key, item)
 	object *item;
 {
 	int where;
+	char **keys;
 	object **entries;
 	if (key == NULL || item == NULL) {
 		err_badcall();
 		return -1;
 	}
+	where = (int) self->ob_size;
+	if (where < 0)
+		{where = 0;}
+	self->ob_size++;
+	keys = self->dict_key;
+	RESIZE(keys, char *, self->ob_size);
 	entries = self->ob_item;
-	RESIZE(entries, object *, self->ob_size+1);
+	RESIZE(entries, object *, self->ob_size);
 	if (entries == NULL) {
 		err_nomem();
 		return -1;
 	}
-	where = (int) self->ob_size;
-	if (where < 0)
-		where = 0;
-	self->dict_key[where] = key;
+	keys[where] = key;
 	entries[where] = item;
+	self->dict_key = keys;
 	self->ob_item = entries;
 	INCREF(item);
-	self->ob_size++;
 	return 0;
 }
 
@@ -173,6 +177,7 @@ int where;
 	DECREF(entries[where]);
 	RESIZE(keys, char *, self->ob_size);
 	RESIZE(entries, object *, self->ob_size);
+	self->dict_key = keys;
 	self->ob_item = entries;
 	return 0;
 }
