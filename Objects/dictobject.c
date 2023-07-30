@@ -104,7 +104,8 @@ ins(self, key, item)
 		err_nomem();
 		return -1;
 	}
-	keys[where] = key;
+	keys[where] = NEW(char, strlen(key));
+	strcpy(keys[where], key);
 	entries[where] = item;
 	self->dict_key = keys;
 	self->ob_item = entries;
