@@ -41,11 +41,8 @@ add_module(name)
 	char *name;
 {
 	object *m;
-	extern object * last_exception;
 	if ((m = dictlookup(modules, name)) != NULL && is_moduleobject(m))
 		{return m;}
-	else
-		{last_exception = NULL;}
 	m = newmoduleobject(name);
 	if (m == NULL)
 		{return NULL;}

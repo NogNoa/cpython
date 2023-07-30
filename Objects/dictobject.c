@@ -73,7 +73,7 @@ dictlookup(dp, key)
 	if (i >= 0)
 		{return dct->ob_item[i];}
 	else {
-		err_setstr(KeyError, key);
+		// err_setstr(KeyError, key);
 		return NULL;
 	}	
 }
