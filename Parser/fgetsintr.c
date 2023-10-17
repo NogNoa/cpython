@@ -6,7 +6,7 @@
 int fgets_intr(str, n, stream)
 char *str; int n; FILE *stream;
 {
-    char * call = NEW(char, n);
+    char * call = NEW(char, n+1);
     int back;
     strncpy(call, str, n);
     if (fgets(str, n, stream) == NULL)
