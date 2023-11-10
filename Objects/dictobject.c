@@ -33,12 +33,12 @@ dict_dealloc(op)
 	int i;
 	for (i = 0; i < op->ob_size; i++) {
 		if (op->dict_key[i] != NULL)
-			free(op->dict_key[i]);
+			{free(op->dict_key[i]);}
 		if (op->ob_item[i] != NULL)
-			free(op->ob_item[i]);
+			{DECREF(op->ob_item[i]);}
 	}
 	if (op->ob_item != NULL)
-		free((ANY *)op->ob_item);
+		{free((ANY *)op->ob_item);}
 	free((ANY *)op);
 }
 
