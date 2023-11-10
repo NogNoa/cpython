@@ -2,6 +2,7 @@ obj/
 .vscode/
 Research/
 bin/
+.vs/
 
 *.h.gch
 *.o

@@ -4,6 +4,8 @@
 
 #define MAXINDENT 100	/* Max indentation level */
 
+#define MAX_PNT(a, b) (a>=b) ? a : b
+
 /* Tokenizer state */
 struct tok_state {
 	/* Input state; buf <= cur <= inp <= end */

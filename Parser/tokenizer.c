@@ -135,7 +135,7 @@ tok_free(tok)
 {
 	/* XXX really need a separate flag to say 'my buffer' */
 	if (tok->fp != NULL && tok->buf != NULL)
-		DEL(tok->buf);
+		{DEL(tok->buf);}
 	DEL(tok);
 }
 
@@ -354,7 +354,7 @@ tok_get(tok, p_start, p_end)
 	} while (c == ' ' || c == '\t');
 	
 	/* Set start of current token */
-	*p_start = (char *) max(tok->cur - 1, tok->buf);
+	*p_start = MAX_PNT(tok->cur - 1, tok->buf);
 	
 	/* Skip comment */
 	if (c == '#') {
@@ -391,7 +391,7 @@ tok_get(tok, p_start, p_end)
 	/* Newline */
 	if (c == '\n') {
 		tok->atbol = 1;
-		*p_end =  (char *) max(tok->cur - 1, tok->buf); /* Leave '\n' out of the string */
+		*p_end = MAX_PNT(tok->cur - 1, tok->buf); /* Leave '\n' out of the string */
 		return NEWLINE;
 	}
 	
