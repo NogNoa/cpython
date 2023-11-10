@@ -117,6 +117,7 @@ tok_setupf(fp, ps1, ps2)
 		DEL(tok);
 		return NULL;
 	}
+	*(tok->buf) = 0;
 	tok->cur = tok->inp = tok->buf;
 	tok->end = tok->buf + BUFSIZ;
 	tok->fp = fp;
@@ -353,7 +354,7 @@ tok_get(tok, p_start, p_end)
 	} while (c == ' ' || c == '\t');
 	
 	/* Set start of current token */
-	*p_start = tok->cur - 1;
+	*p_start = (char *) max(tok->cur - 1, tok->buf);
 	
 	/* Skip comment */
 	if (c == '#') {
@@ -390,7 +391,7 @@ tok_get(tok, p_start, p_end)
 	/* Newline */
 	if (c == '\n') {
 		tok->atbol = 1;
-		*p_end = tok->cur - 1; /* Leave '\n' out of the string */
+		*p_end =  (char *) max(tok->cur - 1, tok->buf); /* Leave '\n' out of the string */
 		return NEWLINE;
 	}
 	

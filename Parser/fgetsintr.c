@@ -10,7 +10,7 @@ char *str; int n; FILE *stream;
     int back;
     strncpy(call, str, n);
     if (fgets(str, n, stream) == NULL)
-    {   if (strncmp(call,str, n))
+    {   if (strncmp(call, str, n))
             {back = E_TOKEN;}
         else {back = E_EOF;}
     }
