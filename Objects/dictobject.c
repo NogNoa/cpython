@@ -31,7 +31,7 @@ dict_dealloc(op)
 	dictobject *op;
 {
 	int i;
-	for (i = 0; i < op->ob_size; i++) {
+	for (i = op->ob_size; i-- > 0;) {
 		XDEL(op->dict_key[i]);
 		if (op->ob_item[i] != NULL)
 			{DECREF(op->ob_item[i]);}

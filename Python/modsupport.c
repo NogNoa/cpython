@@ -23,7 +23,6 @@ initmodule(name, methods)
 		sprintf(namebuf, "%s.%s", name, ml->ml_name);
 		v = newmethodobject(strdup(namebuf), ml->ml_meth,
 						(object *)NULL);
-		/* XXX The strdup'ed memory is never freed */
 		if (v == NULL || dictinsert(d, ml->ml_name, v) != 0) {
 			fprintf(stderr, "initializing module: %s\n", name);
 			fatal("can't initialize module");

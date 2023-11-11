@@ -58,6 +58,7 @@ meth_dealloc(m)
 {
 	if (m->m_self != NULL)
 		{DECREF(m->m_self);}
+	XDEL(m->m_name);
 	free((char *)m);
 }
 
