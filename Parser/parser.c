@@ -248,6 +248,11 @@ addtoken(ps, type, str, lineno)
 					D(printf(" MemError: shift.\n"));
 					return E_NOMEM;
 				}
+				else 
+					{str = NULL;}
+				/*If shift was succesfull, ownership of str
+				  was passed to the nodes, and isn't parsetok's
+				  problem. */
 				D(printf(" Shift.\n"));
 				/* Pop while we are in an accept-only state */
 				while (s = &d->d_state

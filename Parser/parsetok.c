@@ -121,7 +121,10 @@ parsetok(tok, g, start, n_ret)
 		strncpy(str, a, len);
 		str[len] = '\0';
 		ret = addtoken(ps, (int)type, str, tok->lineno);
-		DEL(str);
+		if (str != NULL)
+			{DEL(str);}
+		/* If str wasn't passed to the
+		   nodes it must be cleaned up.*/
 		if (ret != E_OK) {
 			if (ret == E_DONE) {
 				*n_ret = ps->p_tree;
