@@ -22,5 +22,5 @@ typedef struct {
 
 parser_state *newparser PROTO((struct _grammar *g, int start));
 void delparser PROTO((parser_state *ps));
-int addtoken PROTO((parser_state *ps, int type, char *str, int lineno));
+int addtoken PROTO((parser_state *ps, int type, char **p_str, int lineno));
 void addaccelerators PROTO((grammar *g));

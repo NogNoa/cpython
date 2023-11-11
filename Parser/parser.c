@@ -200,13 +200,14 @@ classify(g, type, str)
 }
 
 int
-addtoken(ps, type, str, lineno)
+addtoken(ps, type, p_str, lineno)
 	register parser_state *ps;
 	register int type;
-	char *str;
+	char **p_str;
 	int lineno;
 {
 	register int ilabel;
+	char *str = *p_str;
 	
 	D(printf("Token %s/'%s' ... ", tok_name[type], str));
 	
@@ -249,7 +250,7 @@ addtoken(ps, type, str, lineno)
 					return E_NOMEM;
 				}
 				else 
-					{str = NULL;}
+					{*p_str = NULL;}
 				/*If shift was succesfull, ownership of str
 				  was passed to the nodes, and isn't parsetok's
 				  problem. */
