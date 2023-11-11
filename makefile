@@ -363,8 +363,8 @@ GENSOURCES=    acceler grammar1 \
 OBJECTSSOURCES=	classobject  floatobject  funcobject  listobject    moduleobject  stringobject  typeobject \
 				fileobject   frameobject  intobject   methodobject  object        tupleobject  dictobject
 
-MAINSOURCES=	bltinmodule  cgensupport  errors  getcwd    import      pythonmain  structmember  traceback \
-				ceval        compile      fmod    graminit  modsupport  strerror    sysmodule
+MAINSOURCES=	bltinmodule  cgensupport  errors  import    pythonmain  structmember  traceback \
+				ceval        compile      fmod    graminit  modsupport  sysmodule
 
 CONFIGDEFS=    $(STDW_USE) $(AM_USE) $(AUDIO_USE) $(GL_USE) $(PANEL_USE) \
                '-DPYTHONPATH="$(DEFPYTHONPATH)"'
