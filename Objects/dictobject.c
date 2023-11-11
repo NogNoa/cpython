@@ -32,13 +32,12 @@ dict_dealloc(op)
 {
 	int i;
 	for (i = 0; i < op->ob_size; i++) {
-		if (op->dict_key[i] != NULL)
-			{free(op->dict_key[i]);}
+		XDEL(op->dict_key[i]);
 		if (op->ob_item[i] != NULL)
 			{DECREF(op->ob_item[i]);}
 	}
-	if (op->ob_item != NULL)
-		{free((ANY *)op->ob_item);}
+	XDEL(op->dict_key);
+	XDEL(op->ob_item);
 	free((ANY *)op);
 }
 
