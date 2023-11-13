@@ -26,6 +26,7 @@ extern typeobject Inttype;
 
 extern object *newintobject PROTO((long));
 extern long getintvalue PROTO((object *));
+extern void clean_free_list(void);
 
 
 /*

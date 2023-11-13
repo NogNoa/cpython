@@ -38,7 +38,7 @@ err_zdiv()
    dedicated free list, filled when necessary with memory from malloc().
 */
 
-#define BLOCK_SIZE	1000	/* 1K less typical malloc overhead */
+#define BLOCK_SIZE	1008	/* 1K less typical malloc overhead */
 #define N_INTOBJECTS	(BLOCK_SIZE / sizeof(intobject))
 
 static intobject *
@@ -72,6 +72,15 @@ newintobject(ival)
 	v->ob_type = &Inttype;
 	v->ob_ival = ival;
 	return (object *) v;
+}
+
+void 
+clean_free_list(void)
+{
+	if (free_list != NULL) {
+		free(free_list - N_INTOBJECTS + 1);
+		free_list = NULL;
+	}
 }
 
 static void

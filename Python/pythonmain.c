@@ -83,12 +83,15 @@ run(fp, filename)
 	FILE *fp;
 	char *filename;
 {
+	int retval;
 	if (filename == NULL)
 		filename = "???";
 	if (isatty(fileno(fp)))
-		return run_tty_loop(fp, filename);
+		retval = run_tty_loop(fp, filename);
 	else
-		return run_script(fp, filename);
+		retval = run_script(fp, filename);
+	clean_free_list();
+	return retval;
 }
 
 int
