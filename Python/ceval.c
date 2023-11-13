@@ -675,6 +675,7 @@ eval_code(co, globals, locals, arg)
 	err = 0;
 	x = None;	/* Not a reference, just anything non-NULL */
 	lineno = -1;
+	oparg = 0;
 	
 	for (;;) {
 		static int ticker;
