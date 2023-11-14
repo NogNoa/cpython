@@ -77,7 +77,7 @@ newintobject(ival)
 }
 
 void 
-clean_free_list(void)
+doneints(void)
 {
 	XDEL(free_list_root);
 	free_list = NULL;

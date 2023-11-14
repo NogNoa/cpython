@@ -83,15 +83,12 @@ run(fp, filename)
 	FILE *fp;
 	char *filename;
 {
-	int retval;
 	if (filename == NULL)
 		filename = "???";
 	if (isatty(fileno(fp)))
-		retval = run_tty_loop(fp, filename);
+		return run_tty_loop(fp, filename);
 	else
-		retval = run_script(fp, filename);
-	clean_free_list();
-	return retval;
+		return run_script(fp, filename);
 }
 
 int
@@ -338,7 +335,11 @@ goaway(sts)
 	   calls wdone(), and doneimport() may close windows */
 	doneimport();
 	donecalls();
+
+	/* Similarly doneinport require int objects to still be reachable*/
 	
+	doneints();
+
 	err_clear();
 
 #ifdef REF_DEBUG
