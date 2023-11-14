@@ -41,11 +41,13 @@ err_zdiv()
 #define BLOCK_SIZE	1008	/* 1K less typical malloc overhead */
 #define N_INTOBJECTS	(BLOCK_SIZE / sizeof(intobject))
 
+static intobject *free_list_root = NULL;
+
 static intobject *
 fill_free_list()
 {
 	intobject *p, *q;
-	p = NEW(intobject, N_INTOBJECTS);
+	free_list_root = p = NEW(intobject, N_INTOBJECTS);
 	if (p == NULL)
 		return (intobject *)err_nomem();
 	q = p + N_INTOBJECTS;
@@ -77,10 +79,8 @@ newintobject(ival)
 void 
 clean_free_list(void)
 {
-	if (free_list != NULL) {
-		free(free_list - N_INTOBJECTS + 1);
-		free_list = NULL;
-	}
+	XDEL(free_list_root);
+	free_list = NULL;
 }
 
 static void

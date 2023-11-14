@@ -33,8 +33,7 @@ dict_dealloc(op)
 	int i;
 	for (i = op->ob_size; i-- > 0;) {
 		XDEL(op->dict_key[i]);
-		if (op->ob_item[i] != NULL)
-			{DECREF(op->ob_item[i]);}
+		XDECREF(op->ob_item[i]);
 	}
 	XDEL(op->dict_key);
 	XDEL(op->ob_item);
