@@ -47,13 +47,14 @@ static intobject *
 fill_free_list()
 {
 	intobject *p, *q;
-	free_list_root = p = NEW(intobject, N_INTOBJECTS);
+	p = NEW(intobject, N_INTOBJECTS);
 	if (p == NULL)
 		return (intobject *)err_nomem();
 	q = p + N_INTOBJECTS;
 	while (--q > p)
 		*(intobject **)q = q-1;
-	*(intobject **)q = NULL;
+	*(intobject **)q = free_list_root;
+	free_list_root = p;
 	return p + N_INTOBJECTS - 1;
 }
 
