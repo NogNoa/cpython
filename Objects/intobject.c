@@ -42,20 +42,26 @@ err_zdiv()
 #define N_INTOBJECTS	(BLOCK_SIZE / sizeof(intobject))
 
 static intobject *free_list_root = NULL;
+static int list_length_factor = 0;
 
 static intobject *
 fill_free_list()
 {
 	intobject *p, *q;
-	p = NEW(intobject, N_INTOBJECTS);
-	if (p == NULL)
+	++list_length_factor;
+	if (free_list_root == NULL)
+	{	free_list_root = NEW(intobject, N_INTOBJECTS);
+		*(intobject **)free_list_root = NULL;
+	}
+	else
+		{RESIZE(free_list_root, intobject, N_INTOBJECTS * list_length_factor);}
+	if (free_list_root == NULL)
 		return (intobject *)err_nomem();
-	q = p + N_INTOBJECTS;
-	while (--q > p)
-		*(intobject **)q = q-1;
-	*(intobject **)q = free_list_root;
-	free_list_root = p;
-	return p + N_INTOBJECTS - 1;
+	q = free_list_root + N_INTOBJECTS * list_length_factor;
+	p = q - N_INTOBJECTS;
+	while (++p < q)
+		*(intobject **)p = p-1;
+	return q - 1;
 }
 
 static intobject *free_list = NULL;
