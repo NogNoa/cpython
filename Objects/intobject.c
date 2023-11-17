@@ -65,7 +65,7 @@ newintobject(ival)
 	long ival;
 {
 	register intobject *v;
-	if (free_list == NULL) {
+	if (free_list == free_list_root) {
 		if ((free_list = fill_free_list()) == NULL)
 			return NULL;
 	}
