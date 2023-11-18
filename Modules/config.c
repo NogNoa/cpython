@@ -11,6 +11,7 @@ static int use_stdwin;
 void inittime PROTO((void));
 void initmath PROTO((void));
 void initposix PROTO((void));
+void doneposix PROTO((void));
 
 /*ARGSUSED*/
 void
@@ -85,6 +86,7 @@ initcalls()
 void
 donecalls()
 {
+	doneposix();
 #ifdef USE_STDWIN
 	if (use_stdwin)
 		wdone();

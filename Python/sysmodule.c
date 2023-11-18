@@ -114,6 +114,7 @@ donesys(void)
 	XDECREF(sysin);
 	XDECREF(sysout);
 	XDECREF(syserr);
+	XDECREF(sysdict);
 }
 
 static object *

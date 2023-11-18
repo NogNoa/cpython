@@ -407,3 +407,9 @@ initposix()
 	if (PosixError == NULL || dictinsert(d, "error", PosixError) != 0)
 		fatal("can't define posix.error");
 }
+
+void
+doneposix()
+{
+	XDECREF(PosixError);
+}

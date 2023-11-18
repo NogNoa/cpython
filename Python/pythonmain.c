@@ -341,6 +341,7 @@ goaway(sts)
 	doneints();
 
 	donesys();
+	donebuiltin();
 	err_clear();
 
 #ifdef REF_DEBUG
