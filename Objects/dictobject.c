@@ -83,7 +83,7 @@ ins(self, key, item)
 	char *key;
 	object *item;
 {
-	int where;
+	int where, phys_size;
 	char **keys;
 	object **entries;
 	if (key == NULL || item == NULL) {
@@ -95,9 +95,12 @@ ins(self, key, item)
 		{where = 0;}
 	self->ob_size++;
 	keys = self->dict_key;
-	RESIZE(keys, char *, self->ob_size);
 	entries = self->ob_item;
-	RESIZE(entries, object *, self->ob_size);
+	phys_size = (sizeof self->dict_key)/(sizeof (char *));
+	if (phys_size < self->ob_size)
+	{	RESIZE(keys, char *, self->ob_size);
+		RESIZE(entries, object *, self->ob_size);
+	}
 	if (entries == NULL) {
 		err_nomem();
 		return -1;
@@ -175,8 +178,6 @@ int where;
 	}
 	DEL(keys[where]);
 	DECREF(entries[where]);
-	RESIZE(keys, char *, self->ob_size);
-	RESIZE(entries, object *, self->ob_size);
 	self->dict_key = keys;
 	self->ob_item = entries;
 	return 0;
@@ -204,6 +205,15 @@ dictremove(dp, key)
 		return -1;
 	}
 }
+
+/* nognoa: I no longer resize on shrinking the dictionary
+		   code always calls import.cleardict which runs
+		   dictremove on entries one by one. before just
+		   deallocating the dictionary. This is wastefull
+		   with all the reallocs. And in general adding and
+		   removing entries can cause the dictionary to need to
+		   be moved in memory for no reason.
+*/
 
 
 int
