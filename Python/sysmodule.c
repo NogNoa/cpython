@@ -101,8 +101,11 @@ initsys()
 	if (err_occurred())
 		fatal("can't create sys.std* file objects");
 	dictinsert(sysdict, "stdin", sysin);
+	DECREF(sysin);
 	dictinsert(sysdict, "stdout", sysout);
+	DECREF(sysout);
 	dictinsert(sysdict, "stderr", syserr);
+	DECREF(syserr);
 	dictinsert(sysdict, "modules", get_modules());
 	if (err_occurred())
 		fatal("can't insert sys.* objects in sys dict");
