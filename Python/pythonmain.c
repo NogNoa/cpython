@@ -336,10 +336,11 @@ goaway(sts)
 	doneimport();
 	donecalls();
 
-	/* Similarly doneinport require int objects to still be reachable*/
+	/* Similarly doneinport require int objects to still be allocated*/
 	
 	doneints();
 
+	donesys();
 	err_clear();
 
 #ifdef REF_DEBUG

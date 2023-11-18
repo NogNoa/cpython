@@ -100,15 +100,20 @@ initsys()
 	syserr = newopenfileobject(stderr, "<stderr>", "w");
 	if (err_occurred())
 		fatal("can't create sys.std* file objects");
-	dictinsert(sysdict, "stdin", sysin);
-	DECREF(sysin);
-	dictinsert(sysdict, "stdout", sysout);
-	DECREF(sysout);
+	dictinsert(sysdict, "stdin", sysin);	
+	dictinsert(sysdict, "stdout", sysout);	
 	dictinsert(sysdict, "stderr", syserr);
-	DECREF(syserr);
 	dictinsert(sysdict, "modules", get_modules());
 	if (err_occurred())
 		fatal("can't insert sys.* objects in sys dict");
+}
+
+void
+donesys(void)
+{
+	XDECREF(sysin);
+	XDECREF(sysout);
+	XDECREF(syserr);
 }
 
 static object *

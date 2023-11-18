@@ -99,9 +99,15 @@ void
 err_clear()
 {
 	XDECREF(last_exception);
-	last_exception = NULL;
 	XDECREF(last_exc_val);
-	last_exc_val = NULL;
+	XDECREF(RuntimeError);
+	XDECREF(EOFError);
+	XDECREF(TypeError);
+	XDECREF(MemoryError);
+	XDECREF(NameError);
+	XDECREF(SystemError);
+	XDECREF(KeyboardInterrupt);
+
 }
 
 /* Convenience functions to set a type error exception and return 0 */
