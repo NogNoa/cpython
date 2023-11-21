@@ -6,6 +6,7 @@
 #include "assert.h"
 #include "grammar.h"
 #include "token.h"
+#include "exmalloc.h"
 
 /* Return the DFA for the given type */
 
@@ -50,4 +51,20 @@ labelrepr(lb)
 			return buf;
 		}
 	}
+}
+
+void
+donegrammar(g)
+	grammar* g;
+{
+	dfa *d = g->g_dfa;
+	int i;
+	for (i = g->g_ndfas; --i >= 0; d++)
+	{	int j;
+		state *s = d->d_state;
+		for (j = d->d_nstates; --j >= 0 ;s++)
+		{	XDEL(s->s_accel);
+		}
+	}
+
 }

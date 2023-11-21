@@ -29,22 +29,6 @@ newgrammar(start)
 	return g;
 }
 
-void
-donegrammar(g)
-	grammar* g;
-{
-	dfa *d = g->g_dfa;
-	int i;
-	for (i = g->g_ndfas; --i >= 0; d++)
-	{	int j;
-		state *s = d->d_state;
-		for (j = d->d_nstates; --j >= 0 ;s++)
-		{	XDEL(s->s_accel)
-		}
-	}
-
-}
-
 dfa *
 adddfa(g, type, name)
 	grammar *g;

@@ -83,7 +83,7 @@ ins(self, key, item)
 	char *key;
 	object *item;
 {
-	int where, phys_size;
+	int where;
 	char **keys;
 	object **entries;
 	if (key == NULL || item == NULL) {
@@ -95,12 +95,9 @@ ins(self, key, item)
 		{where = 0;}
 	self->ob_size++;
 	keys = self->dict_key;
+	RESIZE(keys, char *, self->ob_size);
 	entries = self->ob_item;
-	phys_size = (sizeof self->dict_key)/(sizeof (char *));
-	if (phys_size < self->ob_size)
-	{	RESIZE(keys, char *, self->ob_size);
-		RESIZE(entries, object *, self->ob_size);
-	}
+	RESIZE(entries, object *, self->ob_size);
 	if (entries == NULL) {
 		err_nomem();
 		return -1;
@@ -178,6 +175,8 @@ int where;
 	}
 	DEL(keys[where]);
 	DECREF(entries[where]);
+	RESIZE(keys, char *, self->ob_size);
+	RESIZE(entries, object *, self->ob_size);
 	self->dict_key = keys;
 	self->ob_item = entries;
 	return 0;
