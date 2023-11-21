@@ -62,6 +62,7 @@ typedef struct _grammar {
 /* FUNCTIONS */
 
 grammar *newgrammar PROTO((int start));
+void donegrammar PROTO((grammar *g));
 dfa *adddfa PROTO((grammar *g, int type, char *name));
 int addstate PROTO((dfa *d));
 void addarc PROTO((dfa *d, int from, int to, int lbl));

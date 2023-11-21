@@ -342,6 +342,7 @@ goaway(sts)
 
 	donesys();
 	donebuiltin();
+	donegrammar(&gram);
 	err_clear();
 
 #ifdef REF_DEBUG
