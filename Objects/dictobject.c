@@ -4,6 +4,7 @@
 
 typedef struct {
 	OB_VARHEAD
+	int phys_size; //actual allocated size for keys and objects
 	char **dict_key; //listobject
 	object **ob_item;
 } dictobject;
@@ -22,6 +23,7 @@ newdictobject(void)
 	NEWREF(op);
 	op->ob_type = &Dicttype;
 	op->ob_size = 0;
+	op->phys_size = 0;
 	return (object *) op;
 }
 
@@ -31,7 +33,7 @@ dict_dealloc(op)
 	dictobject *op;
 {
 	int i;
-	for (i = op->ob_size; i-- > 0;) {
+	for (i = op->phys_size; i-- > 0;) {
 		XDEL(op->dict_key[i]);
 		XDECREF(op->ob_item[i]);
 	}
@@ -95,9 +97,12 @@ ins(self, key, item)
 		{where = 0;}
 	self->ob_size++;
 	keys = self->dict_key;
-	RESIZE(keys, char *, self->ob_size);
 	entries = self->ob_item;
-	RESIZE(entries, object *, self->ob_size);
+	if (self->phys_size < self->ob_size)
+	{	self->phys_size = self->ob_size;
+		RESIZE(keys, char *, self->phys_size);
+		RESIZE(entries, object *, self->phys_size);
+	}
 	if (entries == NULL) {
 		err_nomem();
 		return -1;
@@ -175,8 +180,11 @@ int where;
 	}
 	DEL(keys[where]);
 	DECREF(entries[where]);
-	RESIZE(keys, char *, self->ob_size);
-	RESIZE(entries, object *, self->ob_size);
+	if (self->phys_size > (self->ob_size << 1))
+	{	self->phys_size = self->ob_size;
+		RESIZE(keys, char *, self->phys_size);
+		RESIZE(entries, object *, self->phys_size);
+	}
 	self->dict_key = keys;
 	self->ob_item = entries;
 	return 0;
@@ -212,6 +220,7 @@ dictremove(dp, key)
 		   with all the reallocs. And in general adding and
 		   removing entries can cause the dictionary to need to
 		   be moved in memory for no reason.
+		   Increase size as needed. Decrease when twice as large as needed.
 */
 
 
