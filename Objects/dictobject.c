@@ -180,7 +180,7 @@ int where;
 	}
 	DEL(keys[where]);
 	DECREF(entries[where]);
-	//entries[where] = 0;
+	entries[where] = 0;
 	self->dict_key = keys;
 	self->ob_item = entries;
 	return 0;
