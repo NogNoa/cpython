@@ -180,11 +180,7 @@ int where;
 	}
 	DEL(keys[where]);
 	DECREF(entries[where]);
-	if (self->phys_size > (self->ob_size << 1))
-	{	self->phys_size = self->ob_size;
-		RESIZE(keys, char *, self->phys_size);
-		RESIZE(entries, object *, self->phys_size);
-	}
+	entries[where] = 0;
 	self->dict_key = keys;
 	self->ob_item = entries;
 	return 0;
