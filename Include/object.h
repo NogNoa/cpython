@@ -198,7 +198,7 @@ environment the global variable trick is not safe.)
 #endif
 
 #ifndef TRACE_REFS
-#define DELREF(op) (*(op)->ob_type->tp_dealloc)((object *)(op))
+#define DELREF(op) {(*(op)->ob_type->tp_dealloc)((object *)(op)); op = NULL;}
 #define UNREF(op) /*empty*/
 #endif
 
