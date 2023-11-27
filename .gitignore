@@ -1,0 +1,9 @@
+.vs/
+.vscode/
+bin/
+obj/
+
+*.gch
+*.bak
+
+libpython.a
